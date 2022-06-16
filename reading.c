@@ -9,8 +9,8 @@
 
 /*--------------------------------------------------------------------*/
 
-Polynoimial_t readPoly(void) {
-    Polynoimial_t poly;
+Polynomial_t readPoly(void) {
+    Polynomial_t poly;
     int n = 0;
     scanf("%d", &n);
 
@@ -25,7 +25,7 @@ Polynoimial_t readPoly(void) {
     }
 
     poly.degree = n;
-    poly.coefficient = a_n;
+    poly.coefficients = a_n;
 
     return poly;
 }
