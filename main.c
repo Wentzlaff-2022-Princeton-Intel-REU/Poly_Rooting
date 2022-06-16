@@ -3,8 +3,8 @@
 /* Author: Manya Zhu                                          */
 /*------------------------------------------------------------*/
 
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "reading.h"
 #include "newton.h"
 #include "derivative.h"
