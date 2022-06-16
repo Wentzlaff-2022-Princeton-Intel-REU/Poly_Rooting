@@ -4,6 +4,7 @@
 /*------------------------------------------------------------*/
 
 #include <stdlib.h>
+#include <stdio.h>
 #include "reading.h"
 #include "newton.h"
 #include "derivative.h"
@@ -18,7 +19,7 @@ int main(int argc, char *argv[]) {
     }
     double value;
     Polynomial_t poly = readPoly();
-    Polynomial_t polyd = diffrentiatePoly(poly);
+    Polynomial_t polyd = diffegrentiatePoly(poly);
     double crit_conversion = strtod(argv[1], NULL);
     value = guess(poly, polyd, crit_conversion);
     printf("The root approximation is: %lf \n", value);
