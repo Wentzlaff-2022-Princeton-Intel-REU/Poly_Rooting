@@ -3,6 +3,7 @@
 /* Author: Dara Oseyemi                                               */
 /*--------------------------------------------------------------------*/
 
+#include <stdlib.h>
 #include "newton.h"
 #include "horner.h"
 

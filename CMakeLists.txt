@@ -3,4 +3,4 @@
 # to the root binary directory of the project as ${HELLO_BINARY_DIR}.
 cmake_minimum_required (VERSION 2.8.11)
 project (Poly_Rooting)
-add_executable (poly_rooting main.c reading.c horner.c)
+add_executable (poly_rooting main.c reading.c horner.c newton.c)
