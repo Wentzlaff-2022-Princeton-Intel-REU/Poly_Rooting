@@ -7,15 +7,14 @@
 
 /*--------------------------------------------------------------------*/
 
-Polynomial_t differentiatePoly (Polynomial_t myPoly)
 
-{
 
 // This is a root-finding program that will take the derivative of a polynomial.
 // It depends on what the structure is
 
 
-Polynomial_t differentiatedPoly;
+
+Polynomial_t differentiatePoly(Polynomial_t myPoly) {
 
 
 
@@ -36,4 +35,3 @@ differentiatedPoly.coefficients[counter-1] = myPoly.coefficients[counter] * (cou
 
 
 
-}
