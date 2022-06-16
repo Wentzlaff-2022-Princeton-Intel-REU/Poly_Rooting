@@ -1,6 +1,12 @@
 #pragma once
+/*------------------------------------------------------------*/
+/* horner.h                                                   */
+/* Author: Manya Zhu                                          */
+/*------------------------------------------------------------*/
 
 #include "polynomial.h"
+
+/*------------------------------------------------------------*/
 
 /* The evaluate function takes in a polynomial and an input (double), 
 then evaluates the polynomial with the given input and returns
