@@ -3,7 +3,6 @@
 /* Author: Mukund Ramakrishnan                                        */
 /*--------------------------------------------------------------------*/
 
-#include <stdlib.h>
 #include "derivative.h"
 
 /*--------------------------------------------------------------------*/
@@ -19,7 +18,7 @@ Polynomial_t differentiatePoly(Polynomial_t myPoly) {
     differentiatedPoly.degree = myPoly.degree - 1;
 
     for (int counter = myPoly.degree; counter > 0; counter--){
-        differentiatedPoly.coefficients[counter-1] = myPoly.coefficients[counter] * (counter);
+        differentiatedPoly.coefficients[myPoly.degree - counter] = myPoly.coefficients[myPoly.degree - counter] * counter;
     }
     // That loop should give out the differentiated polynomial. 
 

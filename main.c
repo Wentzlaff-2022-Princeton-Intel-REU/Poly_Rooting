@@ -20,6 +20,10 @@ int main(int argc, char *argv[]) {
     double value;
     Polynomial_t poly = readPoly();
     Polynomial_t polyd = differentiatePoly(poly);
+    int i;
+    for (i = 0; i <= polyd.degree; i++) {
+        printf("%lf \n", polyd.coefficients[i]);
+    }
     double crit_conversion = strtod(argv[1], NULL);
     value = guess(poly, polyd, crit_conversion);
     printf("The root approximation is: %lf \n", value);

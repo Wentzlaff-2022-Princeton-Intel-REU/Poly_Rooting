@@ -21,7 +21,7 @@ Polynomial_t readPoly(void) {
     }
 
     for (i = 0; i <= n; i++) {
-        scanf("%lf", &a_n[i]);
+        scanf("%lf", &a_n[n - i]);
     }
 
     poly.degree = n;
