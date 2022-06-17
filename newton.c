@@ -3,7 +3,8 @@
 /* Author: Dara Oseyemi                                               */
 /*--------------------------------------------------------------------*/
 
-#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
 #include "newton.h"
 #include "horner.h"
 
@@ -16,7 +17,10 @@ double guess(Polynomial_t poly, Polynomial_t polyDeriv, double convCrit) {
     do {
         oldXGuess = xGuess;
         xGuess -= evaluate(poly, xGuess) / evaluate(polyDeriv, xGuess);
-    } while (abs(xGuess - oldXGuess) <= convCrit);
+
+        printf("guess: %lf, diff: %lf\n", xGuess, fabs(xGuess - oldXGuess));
+
+    } while (fabs(xGuess - oldXGuess) > convCrit);
 
     return xGuess;
 }
