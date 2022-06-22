@@ -9,9 +9,8 @@
 
 double evaluate(Polynomial_t poly, double x) {
     double solution = poly.coefficients[poly.degree];
-    int i;
-
-    for(i = poly.degree; i > 0; i--) {
+ 
+    for(int i = poly.degree; i > 0; i--) {
         solution = poly.coefficients[i - 1] + (solution * x);
     }
 
