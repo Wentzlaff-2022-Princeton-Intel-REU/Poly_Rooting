@@ -18,7 +18,7 @@ double guess(Polynomial_t poly, Polynomial_t polyDeriv, double convCrit) {
         oldXGuess = xGuess;
         xGuess -= evaluate(poly, xGuess) / evaluate(polyDeriv, xGuess);
 
-        printf("guess: %lf, diff: %lf\n", xGuess, fabs(xGuess - oldXGuess));
+        // printf("guess: %lf, diff: %lf\n", xGuess, fabs(xGuess - oldXGuess));
 
     } while (fabs(xGuess - oldXGuess) > convCrit);
 
