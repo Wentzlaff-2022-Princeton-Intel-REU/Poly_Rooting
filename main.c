@@ -1,7 +1,6 @@
-/*------------------------------------------------------------*/
-/* main.c                                                     */
-/* Author: Manya Zhu                                          */
-/*------------------------------------------------------------*/
+/*--------------------------------------------------------------------*/
+/* main.c                                                             */
+/*--------------------------------------------------------------------*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,7 +8,7 @@
 #include "newton.h"
 #include "derivative.h"
 
-/*------------------------------------------------------------*/
+/*--------------------------------------------------------------------*/
 
 int main(int argc, char *argv[]) {
 
@@ -17,12 +16,12 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Usage: %s critical conversion\n", argv[0]);
         exit(EXIT_FAILURE);
     }
-    double value;
+
+    double crit_conversion = strtod(argv[1], NULL);
+    
     Polynomial_t poly = readPoly();
     Polynomial_t polyd = differentiatePoly(poly);
-    double crit_conversion = strtod(argv[1], NULL);
-    value = guess(poly, polyd, crit_conversion);
-    printf("The root approximation is: %lf \n", value);
+    printf("The root approximation is: %lf \n", guess(poly, polyd, crit_conversion));
     
     // for (int i = 0; i <= polyd.degree; i++) {
     //     printf("%lf \n", polyd.coefficients[i]);

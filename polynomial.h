@@ -1,7 +1,6 @@
 #pragma once
 /*------------------------------------------------------------*/
 /* polynomial.h                                               */
-/* Author: Manya Zhu                                          */
 /*------------------------------------------------------------*/
 
 /* A Polynomial is a struct represented by a degree and
