@@ -7,6 +7,8 @@
 #include "reading.h"
 
 /*--------------------------------------------------------------------*/
+void freePoly(Polynomial_t* poly) {
+}
 
 Polynomial_t readPoly(void) {
     int n = 0;

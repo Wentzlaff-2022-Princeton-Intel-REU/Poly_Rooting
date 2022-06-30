@@ -8,6 +8,7 @@
 #include "newton.h"
 #include "horner.h"
 #include "derivative.h"
+#include "reading.h"
 
 /*--------------------------------------------------------------------*/
 
@@ -28,7 +29,7 @@ static Polynomial_t longDiv(Polynomial_t poly, double root) {
     Polynomial_t quotient;
     quotient.degree = n;
     quotient.coefficients = a_n;
-
+   
     return quotient;
 }
 
@@ -65,10 +66,16 @@ double* guess(Polynomial_t poly, double convCrit) {
         } while (fabs(xGuess - oldXGuess) > convCrit);
         guesses[i] = xGuess;
 
+        freePoly(polyDeriv);
+        freePoly(newPoly);
+
         newPoly = longDiv(newPoly, xGuess);
         polyDeriv = differentiatePoly(newPoly);
     }
     qsort(guesses, n, sizeof(double), compare);
 
+    freePoly(polyDeriv);
+    freePoly(newPoly);
+    
     return guesses;
 }

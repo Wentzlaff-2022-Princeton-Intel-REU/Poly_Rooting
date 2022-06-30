@@ -24,6 +24,8 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < poly.degree; i++) {
         printf("The root approximation is: %lf \n", guesses[i]);
     }
+    freePoly(&poly);
+    free(guesses);
     
     // for (int i = 0; i <= polyd.degree; i++) {
     //     printf("%lf \n", polyd.coefficients[i]);
