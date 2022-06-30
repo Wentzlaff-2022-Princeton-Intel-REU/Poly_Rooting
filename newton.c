@@ -10,10 +10,22 @@
 #include "derivative.h"
 #include "reading.h"
 
+
 /*--------------------------------------------------------------------*/
 
 // performs long division on a polynomial dividend and a linear
 // polynomial divisor and returns a polynomial quotient
+
+
+static double RandomReal(double low, double high)
+{
+  double d;
+
+  d = (double) rand() / ((double) RAND_MAX + 1);
+  return (low + d * (high - low));
+}
+
+
 static Polynomial_t longDiv(Polynomial_t poly, double root) {
     int n = poly.degree - 1;
     double* a_n = (double*)malloc(sizeof(double) * (n + 1));
@@ -50,7 +62,20 @@ double* guess(Polynomial_t poly, double convCrit) {
         exit(2);
     }
 
-    double xGuess = 0.1;
+  double bigCoeff = 0;
+
+for (int i = 0; i < poly.degree; i++){
+  
+
+    if (abs(poly.coefficients[i]) > abs(bigCoeff)) {
+        bigCoeff = poly.coefficients[i];
+    }
+
+}
+
+bigCoeff = abs(bigCoeff);
+
+    double xGuess = RandomReal((-bigCoeff-1), (bigCoeff+1));
     double oldXGuess = 0;
 
     Polynomial_t newPoly = poly;
@@ -66,19 +91,16 @@ double* guess(Polynomial_t poly, double convCrit) {
         } while (fabs(xGuess - oldXGuess) > convCrit);
         guesses[i] = xGuess;
 
-        freePoly(&newPoly);
-        freePoly(&polyDeriv);
+        freePoly(polyDeriv);
+        freePoly(newPoly);
 
         newPoly = longDiv(newPoly, xGuess);
         polyDeriv = differentiatePoly(newPoly);
     }
-    freePoly(&newPoly);
-    freePoly(&polyDeriv);
-
-    
     qsort(guesses, n, sizeof(double), compare);
 
-    freePoly(&newPoly);
-
+    freePoly(polyDeriv);
+    freePoly(newPoly);
+    
     return guesses;
 }
