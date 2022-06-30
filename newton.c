@@ -50,7 +50,7 @@ double* guess(Polynomial_t poly, double convCrit) {
         exit(2);
     }
 
-    double xGuess = 0;
+    double xGuess = 0.1;
     double oldXGuess = 0;
 
     Polynomial_t newPoly = poly;
@@ -66,16 +66,16 @@ double* guess(Polynomial_t poly, double convCrit) {
         } while (fabs(xGuess - oldXGuess) > convCrit);
         guesses[i] = xGuess;
 
-        freePoly(&polyDeriv);
         freePoly(&newPoly);
+        freePoly(&polyDeriv);
 
         newPoly = longDiv(newPoly, xGuess);
         polyDeriv = differentiatePoly(newPoly);
     }
-    qsort(guesses, n, sizeof(double), compare);
-
+    freePoly(&newPoly);
     freePoly(&polyDeriv);
-    freePoly(& newPoly);
+    
+    qsort(guesses, n, sizeof(double), compare);
 
     return guesses;
 }
