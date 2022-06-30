@@ -17,8 +17,8 @@ Polynomial_t readPoly(void) {
         exit(2);
     }
 
-    for (int i = 0; i <= n; i++) {
-        scanf("%lf", &a_n[n - i]);
+    for (int i = n; i >= 0; i--) {
+        scanf("%lf", &a_n[i]);
     }
 
     Polynomial_t poly;
