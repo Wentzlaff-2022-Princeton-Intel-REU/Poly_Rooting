@@ -91,16 +91,16 @@ bigCoeff = abs(bigCoeff);
         } while (fabs(xGuess - oldXGuess) > convCrit);
         guesses[i] = xGuess;
 
-        freePoly(polyDeriv);
-        freePoly(newPoly);
+        freePoly(&polyDeriv);
+        freePoly(&newPoly);
 
         newPoly = longDiv(newPoly, xGuess);
         polyDeriv = differentiatePoly(newPoly);
     }
     qsort(guesses, n, sizeof(double), compare);
 
-    freePoly(polyDeriv);
-    freePoly(newPoly);
+    freePoly(&polyDeriv);
+    freePoly(&newPoly);
     
     return guesses;
 }
