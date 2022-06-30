@@ -74,8 +74,11 @@ double* guess(Polynomial_t poly, double convCrit) {
     }
     freePoly(&newPoly);
     freePoly(&polyDeriv);
+
     
     qsort(guesses, n, sizeof(double), compare);
+
+    freePoly(&newPoly);
 
     return guesses;
 }
