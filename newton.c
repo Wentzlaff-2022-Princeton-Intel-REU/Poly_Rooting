@@ -62,18 +62,13 @@ double* guess(Polynomial_t poly, double convCrit) {
         exit(2);
     }
 
-  double bigCoeff = 0;
-
-for (int i = 0; i < poly.degree; i++){
-  
-
-    if (abs(poly.coefficients[i]) > abs(bigCoeff)) {
-        bigCoeff = poly.coefficients[i];
+    double bigCoeff = 0;
+    for (int i = 0; i < poly.degree; i++){
+        if (abs(poly.coefficients[i]) > abs(bigCoeff)) {
+            bigCoeff = poly.coefficients[i];
+        }
     }
-
-}
-
-bigCoeff = abs(bigCoeff);
+    bigCoeff = abs(bigCoeff);
 
     double xGuess = RandomReal((-bigCoeff-1), (bigCoeff+1));
     double oldXGuess = 0;
