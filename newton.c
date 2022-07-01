@@ -82,16 +82,16 @@ double* guess(Polynomial_t poly, double convCrit) {
 
     Polynomial_t newPoly = poly;
     Polynomial_t polyDeriv = differentiatePoly(poly);
-
-    bool firstLoop = true;
     
     for (int i = 0; i < n; i++) {
+      printf("i = %d\n", i);
+      bool firstLoop = true;
         do { 
           oldXGuess = xGuess;
           xGuess -= evaluate(newPoly, xGuess) / evaluate(polyDeriv, xGuess);
           oldDiff = diff;
           diff = fabs(xGuess - oldXGuess);
-          // printf("guess: %lf, oldDiff: %lf, diff: %lf\n", xGuess, oldDiff, diff);
+          printf("guess: %lf, oldGuess: %lf, oldDiff: %lf, diff: %lf\n", xGuess, oldXGuess, oldDiff, diff);
 
           if (!firstLoop && diff > oldDiff && fabs(diff - oldDiff) > 1) {
             return roots;
@@ -106,7 +106,6 @@ double* guess(Polynomial_t poly, double convCrit) {
 
         newPoly = longDiv(newPoly, xGuess);
         polyDeriv = differentiatePoly(newPoly);
-        firstLoop = true;
     }
     freePoly(&newPoly);
     freePoly(&polyDeriv);

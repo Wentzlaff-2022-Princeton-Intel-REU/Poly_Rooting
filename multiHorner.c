@@ -2,12 +2,13 @@
 /* horner.c                                                           */
 /*--------------------------------------------------------------------*/
 
-#include "horner.h"
+#include <stdlib.h>
+#include "multiHorner.h"
 
 /*--------------------------------------------------------------------*/
 
 double* multiEvaluate(Polynomial_t poly, double* x) {
-    double* solution;
+    double* solution = (double*)malloc(sizeof(double) * 2);
     
     for (int i = 0; i < 2; i++) {
         solution[i] = poly.coefficients[poly.degree];
