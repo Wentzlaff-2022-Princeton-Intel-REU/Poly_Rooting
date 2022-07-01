@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------*/
-/* vecHorner.c                                                        */
+/* vecHorner.c  [incomplete]                                          */
 /*--------------------------------------------------------------------*/
 
 #include "horner.h"
@@ -14,9 +14,11 @@ double* vecEvaluate(Polynomial_t poly, double* x) {
     
 
     double32_t* addend1 = poly.coefficients;
-    double32_t* addend2 = poly.coefficients[poly.degree]; // solution
 
-    vint32m1_t va, vb, vc;
+    double32_t* solution;
+
+
+    vfloat64m1_t va, vb, vc;
 
 
 
@@ -24,9 +26,20 @@ double* vecEvaluate(Polynomial_t poly, double* x) {
 
     for (size_t vl; (vl = vsetvl_e32m1(avl)) > 0; avl -= vl) {
 
+       // put a vector here 
+        //  every single vector element is the coefficient of the highest degree (insert a vector here)
 
-        va = vle32_v_i32m1(addend1, vl);
-        vb = vle32_v_i32m1(addend2, vl);
+        for (int i = poly.degree; i > 0; i--){
+
+            va = vle32_v_f64m1(addend1, vl);
+            vc = vadd_vv_f64m1(va, vb, vl);
+
+        }
+
+       
+
+
+
         vc = vadd_vv_i32m1(va, vb, vl);
         vse32_v_i32m1(sum, vc, vl);
         addend1 += vl;
@@ -47,3 +60,6 @@ double* vecEvaluate(Polynomial_t poly, double* x) {
 
     return solution;
 }
+
+
+
