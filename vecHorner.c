@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------*/
-/* vecHorner.c                                                           */
+/* vecHorner.c                                                        */
 /*--------------------------------------------------------------------*/
 
 #include "horner.h"
@@ -9,13 +9,22 @@
 
 /*--------------------------------------------------------------------*/
 
-double vecEvaluate(Polynomial_t poly, double x) {
-    double solution = poly.coefficients[poly.degree];
+double* vecEvaluate(Polynomial_t poly, double* x) {
+  
     
-    vint32m1_t vb, vc;
 
+    double32_t* addend1 = poly.coefficients;
+    double32_t* addend2 = poly.coefficients[poly.degree]; // solution
+
+    vint32m1_t va, vb, vc;
+
+
+
+    size_t avl = poly.degree;
 
     for (size_t vl; (vl = vsetvl_e32m1(avl)) > 0; avl -= vl) {
+
+
         va = vle32_v_i32m1(addend1, vl);
         vb = vle32_v_i32m1(addend2, vl);
         vc = vadd_vv_i32m1(va, vb, vl);
@@ -28,10 +37,13 @@ double vecEvaluate(Polynomial_t poly, double x) {
 
 
     
- 
+ // comment this snippet out when done (below)
+
     for(int i = poly.degree; i > 0; i--) {
         solution = poly.coefficients[i - 1] + (solution * x);
     }
+
+    // 
 
     return solution;
 }
