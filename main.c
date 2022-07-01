@@ -20,12 +20,21 @@ int main(int argc, char *argv[]) {
     double crit_conversion = strtod(argv[1], NULL);
     
     Polynomial_t poly = readPoly();
-    double* guesses = guess(poly, crit_conversion);
-    for (int i = 0; i < poly.degree; i++) {
-        printf("The root approximation is: %lf \n", guesses[i]);
+    double* roots = guess(poly, crit_conversion);
+
+    if (roots[0] == DBL_MAX) {
+        printf("Your polynomial has no roots.\n");
+    }
+    else {
+        for (int i = 0; i < poly.degree; i++) {
+            if (roots[i] == DBL_MAX) {
+                break;
+            }
+            printf("The root approximation is: %lf \n", roots[i]);
+        }
     }
     freePoly(&poly);
-    free(guesses);
+    free(roots);
     
     // for (int i = 0; i <= polyd.degree; i++) {
     //     printf("%lf \n", polyd.coefficients[i]);

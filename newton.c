@@ -4,12 +4,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <math.h>
 #include "newton.h"
 #include "horner.h"
 #include "derivative.h"
 #include "reading.h"
-
 
 /*--------------------------------------------------------------------*/
 
@@ -56,9 +56,13 @@ static int compare(const void * a, const void * b) {
 
 double* guess(Polynomial_t poly, double convCrit) {
     int n = poly.degree;
-    double* guesses = (double*)malloc(sizeof(double) * n);
-    if (guesses == NULL) {
+    double* roots = (double*)malloc(sizeof(double) * n);
+    if (roots == NULL) {
         exit(2);
+    }
+
+    for (int i = 0; i < n; i++) {
+      roots[i] = DBL_MAX;
     }
 
     // double bigCoeff = 0;
@@ -73,30 +77,41 @@ double* guess(Polynomial_t poly, double convCrit) {
 
     double xGuess = (double) rand()/ (double) rand();
     double oldXGuess = 0;
+    double diff = xGuess;
+    double oldDiff = 0;
 
     Polynomial_t newPoly = poly;
     Polynomial_t polyDeriv = differentiatePoly(poly);
+
+    bool firstLoop = true;
     
     for (int i = 0; i < n; i++) {
-        do {
-            oldXGuess = xGuess;
-            xGuess -= evaluate(newPoly, xGuess) / evaluate(polyDeriv, xGuess);
+        do { 
+          oldXGuess = xGuess;
+          xGuess -= evaluate(newPoly, xGuess) / evaluate(polyDeriv, xGuess);
+          oldDiff = diff;
+          diff = fabs(xGuess - oldXGuess);
+          // printf("guess: %lf, oldDiff: %lf, diff: %lf\n", xGuess, oldDiff, diff);
 
-            // printf("guess: %lf, diff: %lf\n", xGuess, fabs(xGuess - oldXGuess));
+          if (!firstLoop && diff > oldDiff && fabs(diff - oldDiff) > 1) {
+            return roots;
+          }
 
-        } while (fabs(xGuess - oldXGuess) > convCrit);
-        guesses[i] = xGuess;
+          firstLoop = false;
+        } while (diff > convCrit);
+        roots[i] = xGuess;
 
-        freePoly(&polyDeriv);
         freePoly(&newPoly);
+        freePoly(&polyDeriv);
 
         newPoly = longDiv(newPoly, xGuess);
         polyDeriv = differentiatePoly(newPoly);
+        firstLoop = true;
     }
     freePoly(&newPoly);
     freePoly(&polyDeriv);
 
-    qsort(guesses, n, sizeof(double), compare);
+    qsort(roots, n, sizeof(double), compare);
     
-    return guesses;
+    return roots;
 }

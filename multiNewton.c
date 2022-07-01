@@ -10,7 +10,6 @@
 #include "derivative.h"
 #include "reading.h"
 
-
 /*--------------------------------------------------------------------*/
 
 // performs long division on a polynomial dividend and a linear
@@ -35,6 +34,10 @@ static Polynomial_t longDiv(Polynomial_t poly, double root) {
     a_n[n] = poly.coefficients[n + 1];
     for (int i = n; i > 0; i--) {
         a_n[i - 1] = poly.coefficients[i] + root * a_n[i];
+    }
+
+    if (poly.coefficients[0] + root * a_n[0] > 1e-7) {
+        return poly;
     }
 
     Polynomial_t quotient;
@@ -79,12 +82,10 @@ double* guess(Polynomial_t poly, double convCrit) {
         oldXGuess[i] = 0;
     }
 
-
-
     Polynomial_t newPoly = poly;
     Polynomial_t polyDeriv = differentiatePoly(poly);
     
-    for (int i = 0; i < n; i++) {
+    while (newPoly.degree > 0) {
         bool cond = true;
         do {
             for (int j = 0; j < 2; j++) {
@@ -105,10 +106,12 @@ double* guess(Polynomial_t poly, double convCrit) {
         } while (cond);
         guesses[i] = xGuess[i];
 
-        freePoly(&polyDeriv);
         freePoly(&newPoly);
+        freePoly(&polyDeriv);
 
-        newPoly = longDiv(newPoly, xGuess);
+        for (int j = 0; j < 2; j++) {
+            newPoly = longDiv(newPoly, xGuess[j]);
+        }
         polyDeriv = differentiatePoly(newPoly);
     }
     freePoly(&newPoly);
