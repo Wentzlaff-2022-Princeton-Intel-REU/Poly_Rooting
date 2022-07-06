@@ -8,5 +8,5 @@ an array of coefficients (index 0 holds the coefficient of the
 lowest degree) */
 typedef struct Polynomial {
     int degree;
-    double* coefficients;
+    float64_t* coefficients;
 } Polynomial_t;

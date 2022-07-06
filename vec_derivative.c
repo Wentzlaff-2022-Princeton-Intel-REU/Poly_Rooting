@@ -15,7 +15,7 @@ Polynomial_t vec_differentiatePoly(Polynomial_t myPoly) {
 
     //create new polynomial to represent the differentiated polynomial
     Polynomial_t differentiatedPoly;
-    double* coes = (double*)malloc(sizeof(double) * (myPoly.degree + 1 - 1));  
+    float64_t* coes = (float64_t*)malloc(sizeof(float64_t) * (myPoly.degree + 1 - 1));  
     if(coes == NULL){
         exit(2)
     }

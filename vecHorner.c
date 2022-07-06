@@ -8,9 +8,9 @@
 
 /*--------------------------------------------------------------------*/
 
-double* vecEvaluate(Polynomial_t poly, double* x) {
+float64_t* vecEvaluate(Polynomial_t poly, float64_t* x) {
   
-    solution = (double*) malloc (sizeof(double) * x.size()/sizeof(double)); 
+    solution = (float64_t*) malloc (sizeof(float64_t) * x.size()/sizeof(float64_t)); 
 
     // declare vector registers
     vfloat64m1_t va, vb, vc;
