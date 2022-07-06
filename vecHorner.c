@@ -28,7 +28,7 @@ float64_t* vecEvaluate(Polynomial_t poly, float64_t* x) {
         for (int i = poly.degree; i > 0; i--){
 
             // We are moving one of the polynomial's coefficients (starting with the degree largest one - 1 and moving to the degree lowest) to a vector.
-            va = fmv_v_f_f64m(poly.coefficients[i-1], vl); 
+            va = vfmv_v_f_f64m(poly.coefficients[i-1], vl); 
 
             // We are multiply-adding this along with the x vector (our guesses).
             vc = vfmadd_vv_f64m1(vc, vb, va, vl); 
