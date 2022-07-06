@@ -19,8 +19,8 @@ double* vecEvaluate(Polynomial_t poly, double* x) {
 
     for (size_t vl; (vl = vsetvl_e32m1(avl)) > 0; avl -= vl) {
 
-
-        vc = vfmv_v_f_f64m(poly.coefficients[poly.degree]);
+        // Filling the vector vc with the highest coefficient(s)
+        vc = vfmv_v_f_f64m(poly.coefficients[poly.degree], vl);
 
         // This is the vector with our guesses (x vector).
         vb = vle64_v_f64m1(x, vl); 
