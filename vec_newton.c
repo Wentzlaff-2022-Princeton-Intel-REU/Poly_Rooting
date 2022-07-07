@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------*/
-/* vec_newton.c                                                           */
+/* vec_newton.c                                                       */
 /*--------------------------------------------------------------------*/
 
 #include <stdio.h>
@@ -93,6 +93,7 @@ double* multiGuess(Polynomial_t poly, double convCrit) {
     int i = 0;
     while (newPoly.degree > 0) {
         bool cond = true;
+        long cond1 = 0;
         bool firstLoop = true;
         do {
             // printf("3\n");
@@ -117,8 +118,7 @@ double* multiGuess(Polynomial_t poly, double convCrit) {
             vb = vmv_v_v_f64m1(va, guessSize);
             va = vfnmsac_vv_f64m1(va, ve, vf, guessSize);
             vd = vmv_v_v_f64m1(vc, guessSize);
-            vc = vfsub_vv_f64m1(va, vb, guessSize);
-            vc = vfabs_v_f64m1(vc, guessSize);
+            vc = vfabs_v_f64m1(vfsub_vv_f64m1(va, vb, guessSize), guessSize);
 
             vse64_v_f64m1(&xGuess, va, guessSize);  
 
@@ -129,30 +129,40 @@ double* multiGuess(Polynomial_t poly, double convCrit) {
             //     printf("guess: %lf, oldGuess: %lf, oldDiff: %lf, diff: %lf\n", xGuess[j], oldXGuess[j], oldDiff[j], diff[j]);
             // }
 
-            for (int j = 0; j < 2; j++) {
-                noRoots = !firstLoop && diff[j] > oldDiff[j] && fabs(diff[j] - oldDiff[j]) > 1;
-                if (!noRoots) {
-                    break;
-                }
-            }
+            // for (int j = 0; j < 2; j++) {
+            //     noRoots = !firstLoop && diff[j] > oldDiff[j] && fabs(diff[j] - oldDiff[j]) > 1;
+            //     if (!noRoots) {
+            //         break;
+            //     }
+            // }
 
-            // vmfgt_vv_f64m1_b64
-            // vmfgt_vf_f64m1_b64
+            vbool64_t vb1, vb2, vb3, vb4;
+
+            vb1 = vmfgt_vv_f64m1_b64(vc, vd, guessSize);
+            vb2 = vmfgt_vf_f64m1_b64(vfabs_v_f64m1(vfsub_vv_f64m1(vc, vd, guessSize), guessSize), 1, guessSize);
+            vb3 = vmand_mm_b64(vb1, vb2, guessSize);
+            long noRoots1 = vfirst_m_b64(vmnot_m_b64(vb3, guessSize), guessSize);
 
             // printf("6\n");
-            if (noRoots) {
+            if (!firstLoop && noRoots1 == -1) {
                 return roots;
             }
 
-            cond = diff[0] > convCrit && diff[1] > convCrit;
+            // cond = diff[0] > convCrit && diff[1] > convCrit;
+
+            vfloat64m1_t crit;
+            crit = vfmv_v_f_f64m(convCrit, guessSize);
+            vb4 = vmfgt_vv_f64m1_b64(vc, crit, guessSize);
+            cond1 = vfirst_m_b64(vmnot_m_b64(vb4, guessSize), guessSize);
+
             firstLoop = false;
-        } while (cond);
+        } while (cond1 == -1);
         // roots[i] = xGuess[i];
         // printf("7\n");
         freePoly(&newPoly);
         freePoly(&polyDeriv);
 
-        for (int j = 0; j < 2; j++) {
+        for (int j = 0; j < guessSize; j++) {
             int degree = newPoly.degree;
             newPoly = longDiv(newPoly, xGuess[j]);
 
