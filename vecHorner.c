@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 
 #include "vecHorner.h"
+#include <stdlib.h>
 #include <riscv_vector.h>
 
 
@@ -10,7 +11,7 @@
 
 double* vecEvaluate(Polynomial_t poly, double* x) {
   
-    double* solution = (double*)malloc(sizeof(double)); 
+    double* solution = (double*)malloc(sizeof(x)); 
 
     // declare vector registers
     vfloat64m1_t va, vb, vc;
@@ -36,7 +37,7 @@ double* vecEvaluate(Polynomial_t poly, double* x) {
         }
 
         // We are storing our results in the solution array.
-       vse64_v_f64m1(&solution[i - avl], vc, vl);  
+       vse64_v_f64m1(&solution[poly.degree - avl], vc, vl);  
 
     } 
 
