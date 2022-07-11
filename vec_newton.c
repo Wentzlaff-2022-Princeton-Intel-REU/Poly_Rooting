@@ -120,7 +120,7 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
             vd = vmv_v_v_f64m1(vc, guessSize);
             vc = vfabs_v_f64m1(vfsub_vv_f64m1(va, vb, guessSize), guessSize);
 
-            vse64_v_f64m1(&xGuess, va, guessSize);  
+            vse64_v_f64m1(xGuess, va, guessSize);  
 
             // printf("5\n");
             // printf("guess: %lf, diff: %lf\n", xGuess, fabs(xGuess - oldXGuess));
