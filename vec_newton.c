@@ -159,8 +159,8 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
         } while (cond1 == -1);
         // roots[i] = xGuess[i];
         // printf("7\n");
-        freePoly(&newPoly);
-        freePoly(&polyDeriv);
+        //freePoly(&newPoly);
+        //freePoly(&polyDeriv);
 
         for (int j = 0; j < guessSize; j++) {
             int degree = newPoly.degree;
@@ -173,8 +173,8 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
         }
         polyDeriv = vec_differentiatePoly(newPoly);
     }
-    freePoly(&newPoly);
-    freePoly(&polyDeriv);
+    //freePoly(&newPoly);
+    //freePoly(&polyDeriv);
 
     qsort(roots, poly.degree, sizeof(double), compare);
     
