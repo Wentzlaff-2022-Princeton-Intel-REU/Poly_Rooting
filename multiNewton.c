@@ -8,6 +8,8 @@
 #include <math.h>
 #include "multiNewton.h"
 #include "multiHorner.h"
+#include "vecHorner.h"
+#include "vec_derivative.h"
 #include "derivative.h"
 #include "reading.h"
 
@@ -94,7 +96,7 @@ double* multiGuess(Polynomial_t poly, double convCrit) {
     }
     // printf("2\n");
     Polynomial_t newPoly = poly;
-    Polynomial_t polyDeriv = differentiatePoly(poly);
+    Polynomial_t polyDeriv = vec_differentiatePoly(poly);
 
     int i = 0;
     while (newPoly.degree > 0) {
@@ -103,8 +105,8 @@ double* multiGuess(Polynomial_t poly, double convCrit) {
         do {
             // printf("3\n");
             bool noRoots = true;
-            double* polyGuess = multiEvaluate(newPoly, xGuess);
-            double* polyDerivGuess = multiEvaluate(polyDeriv, xGuess);
+            double* polyGuess = vecEvaluate(newPoly, xGuess);
+            double* polyDerivGuess = vecEvaluate(polyDeriv, xGuess);
             // printf("4\n");
             for (int j = 0; j < 2; j++) {
                 oldXGuess[j] = xGuess[j];
@@ -147,7 +149,7 @@ double* multiGuess(Polynomial_t poly, double convCrit) {
                 i++;
             }
         }
-        polyDeriv = differentiatePoly(newPoly);
+        polyDeriv = vec_differentiatePoly(newPoly);
     }
     freePoly(&newPoly);
     freePoly(&polyDeriv);
