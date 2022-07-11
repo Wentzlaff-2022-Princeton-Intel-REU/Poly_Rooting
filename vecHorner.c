@@ -10,7 +10,7 @@
 
 double* vecEvaluate(Polynomial_t poly, double* x) {
   
-    double* solution = (double*) malloc (x.size()); 
+    double* solution = (double*) malloc (sizeof(x)); 
 
     // declare vector registers
     vfloat64m1_t va, vb, vc;
