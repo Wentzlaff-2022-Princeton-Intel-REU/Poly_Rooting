@@ -17,7 +17,7 @@ Polynomial_t vec_differentiatePoly(Polynomial_t myPoly) {
     Polynomial_t differentiatedPoly;
     double* coes = (double*)malloc(sizeof(double) * (myPoly.degree + 1 - 1));  
     if(coes == NULL){
-        exit(2)
+        exit(2);
     }
     
     //initialize coefficients and degree
