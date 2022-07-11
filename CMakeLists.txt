@@ -4,3 +4,4 @@
 cmake_minimum_required (VERSION 2.8.11)
 project (Poly_Rooting)
 add_executable (poly_rooting main.c reading.c horner.c newton.c derivative.c multiHorner.c multiNewton.c)
+add_executable (vec_poly_rooting main.c reading.c vecHorner.c vec_derivative.c vec_newton.c)
