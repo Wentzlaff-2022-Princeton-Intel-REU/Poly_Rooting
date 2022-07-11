@@ -15,7 +15,7 @@ Polynomial_t vec_differentiatePoly(Polynomial_t myPoly) {
 
     //create new polynomial to represent the differentiated polynomial
     Polynomial_t differentiatedPoly;
-    float64_t* coes = (float64_t*)malloc(sizeof(float64_t) * (myPoly.degree + 1 - 1));  
+    double* coes = (double*)malloc(sizeof(double) * (myPoly.degree + 1 - 1));  
     if(coes == NULL){
         exit(2)
     }
@@ -29,12 +29,12 @@ Polynomial_t vec_differentiatePoly(Polynomial_t myPoly) {
 
     //pointers for the resulting coefficients (after taking the derivative) and the
     //original coefficients
-    float64_t* results = differentiatedPoly.coefficients;
-    float64_t* coeffs = myPoly.coefficients + 1; //the constant at index 0 is not included in the derivative
+    double* results = differentiatedPoly.coefficients;
+    double* coeffs = myPoly.coefficients + 1; //the constant at index 0 is not included in the derivative
 
     //array that just holds 1 to n, where n is the degree of the original polynomial.
     //this represents the exponents of the polynomial
-    float64_t* indices = (double*)malloc(sizeof(double) * (myPoly.degree + 1 - 1));
+    double* indices = (double*)malloc(sizeof(double) * (myPoly.degree + 1 - 1));
     if(indices == NULL) {
         exit(2);
     }

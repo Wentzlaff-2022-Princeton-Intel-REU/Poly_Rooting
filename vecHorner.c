@@ -8,7 +8,7 @@
 
 /*--------------------------------------------------------------------*/
 
-float64_t* vecEvaluate(Polynomial_t poly, float64_t* x) {
+double* vecEvaluate(Polynomial_t poly, float64_t* x) {
   
     solution = (float64_t*) malloc (sizeof(float64_t) * x.size()/sizeof(float64_t)); 
 

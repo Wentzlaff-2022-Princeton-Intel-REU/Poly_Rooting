@@ -1,4 +1,5 @@
 #pragma once
+
 /*------------------------------------------------------------*/
 /* polynomial.h                                               */
 /*------------------------------------------------------------*/
@@ -8,5 +9,5 @@ an array of coefficients (index 0 holds the coefficient of the
 lowest degree) */
 typedef struct Polynomial {
     int degree;
-    float64_t* coefficients;
+    double* coefficients;
 } Polynomial_t;
