@@ -52,7 +52,7 @@ Polynomial_t vec_differentiatePoly(Polynomial_t myPoly) {
         //load in array of exponents
         vb = vle64_v_f64m1(indices, vl);
         //multiply the two and put the result in vc
-        vc = vmul_vv_u64m1(va, vb, vl);
+        vc = vfmul_vv_f64m1(va, vb, vl);
         //store the resulting coefficients into our differentiated polynomial
         vse64_v_f64m1(results, vc, vl);
 
