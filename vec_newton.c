@@ -9,7 +9,7 @@
 #include <riscv_vector.h>
 #include "vec_newton.h"
 #include "vecHorner.h"
-#include "derivative.h"
+#include "vec_derivative.h"
 #include "reading.h"
 
 /*--------------------------------------------------------------------*/
@@ -88,7 +88,7 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
 
     // printf("2\n");
     Polynomial_t newPoly = poly;
-    Polynomial_t polyDeriv = differentiatePoly(poly);
+    Polynomial_t polyDeriv = vec_differentiatePoly(poly);
 
     int i = 0;
     while (newPoly.degree > 0) {
@@ -98,8 +98,8 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
         do {
             // printf("3\n");
             bool noRoots = true;
-            double* polyGuess = multiEvaluate(newPoly, xGuess);
-            double* polyDerivGuess = multiEvaluate(polyDeriv, xGuess);
+            double* polyGuess = vecEvaluate(newPoly, xGuess);
+            double* polyDerivGuess = vecEvaluate(polyDeriv, xGuess);
 
             vfloat64m1_t ve, vf, ones;
             ones = vfmv_v_f_f64m1(0, guessSize);
@@ -171,7 +171,7 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
                 i++;
             }
         }
-        polyDeriv = differentiatePoly(newPoly);
+        polyDeriv = vec_differentiatePoly(newPoly);
     }
     freePoly(&newPoly);
     freePoly(&polyDeriv);
