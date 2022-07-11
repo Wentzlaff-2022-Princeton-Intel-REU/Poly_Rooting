@@ -82,9 +82,9 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
     }
 
     va = vle64_v_f64m1(xGuess, guessSize);
-    vb = vfmv_v_f_f64m(0, guessSize);
+    vb = vfmv_v_f_f64m1(0, guessSize);
     vc = vle64_v_f64m1(xGuess, guessSize);
-    vd = vfmv_v_f_f64m(0, guessSize);
+    vd = vfmv_v_f_f64m1(0, guessSize);
 
     // printf("2\n");
     Polynomial_t newPoly = poly;
@@ -102,7 +102,7 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
             double* polyDerivGuess = multiEvaluate(polyDeriv, xGuess);
 
             vfloat64m1_t ve, vf, ones;
-            ones = vfmv_v_f_f64m(0, guessSize);
+            ones = vfmv_v_f_f64m1(0, guessSize);
             ve = vle64_v_f64m1(polyGuess, guessSize);
             vf = vle64_v_f64m1(polyDerivGuess, guessSize);
             vf = vfdiv_vv_f64m1(ones, vf, guessSize);
@@ -151,7 +151,7 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
             // cond = diff[0] > convCrit && diff[1] > convCrit;
 
             vfloat64m1_t crit;
-            crit = vfmv_v_f_f64m(convCrit, guessSize);
+            crit = vfmv_v_f_f64m1(convCrit, guessSize);
             vb4 = vmfgt_vv_f64m1_b64(vc, crit, guessSize);
             cond1 = vfirst_m_b64(vmnot_m_b64(vb4, guessSize), guessSize);
 
