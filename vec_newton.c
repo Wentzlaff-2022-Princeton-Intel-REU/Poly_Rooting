@@ -8,7 +8,7 @@
 #include <math.h>
 #include <riscv_vector.h>
 #include "vec_newton.h"
-#include "vec_horner.h"
+#include "vecHorner.h"
 #include "derivative.h"
 #include "reading.h"
 
@@ -51,7 +51,7 @@ static int compare(const void * a, const void * b) {
     return 0;  
 }
 
-double* multiGuess(Polynomial_t poly, double convCrit) {
+double* vec_guess(Polynomial_t poly, double convCrit) {
     double* roots = (double*)malloc(sizeof(double) * poly.degree);
     if (roots == NULL) {
         exit(2);
