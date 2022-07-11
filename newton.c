@@ -8,7 +8,7 @@
 #include <math.h>
 #include "newton.h"
 #include "horner.h"
-#include "derivative.h"
+#include "vec_derivative.h"
 #include "reading.h"
 
 /*--------------------------------------------------------------------*/
@@ -81,7 +81,7 @@ double* guess(Polynomial_t poly, double convCrit) {
     double oldDiff = 0;
 
     Polynomial_t newPoly = poly;
-    Polynomial_t polyDeriv = differentiatePoly(poly);
+    Polynomial_t polyDeriv = vec_differentiatePoly(poly);
     
     for (int i = 0; i < n; i++) {
       printf("i = %d\n", i);
@@ -91,7 +91,7 @@ double* guess(Polynomial_t poly, double convCrit) {
           xGuess -= evaluate(newPoly, xGuess) / evaluate(polyDeriv, xGuess);
           oldDiff = diff;
           diff = fabs(xGuess - oldXGuess);
-          printf("guess: %lf, oldGuess: %lf, oldDiff: %lf, diff: %lf\n", xGuess, oldXGuess, oldDiff, diff);
+         // printf("guess: %lf, oldGuess: %lf, oldDiff: %lf, diff: %lf\n", xGuess, oldXGuess, oldDiff, diff);
 
           if (!firstLoop && diff > oldDiff && fabs(diff - oldDiff) > 1) {
             return roots;
@@ -105,7 +105,7 @@ double* guess(Polynomial_t poly, double convCrit) {
         freePoly(&polyDeriv);
 
         newPoly = longDiv(newPoly, xGuess);
-        polyDeriv = differentiatePoly(newPoly);
+        polyDeriv = vec_differentiatePoly(newPoly);
     }
     freePoly(&newPoly);
     freePoly(&polyDeriv);
