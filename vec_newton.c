@@ -98,8 +98,8 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
         do {
             // printf("3\n");
             bool noRoots = true;
-            double* polyGuess = vecEvaluate(newPoly, xGuess);
-            double* polyDerivGuess = vecEvaluate(polyDeriv, xGuess);
+            double* polyGuess = vecEvaluate(newPoly, xGuess, guessSize);
+            double* polyDerivGuess = vecEvaluate(polyDeriv, xGuess, guessSize);
 
             vfloat64m1_t ve, vf, ones;
             ones = vfmv_v_f_f64m1(0, guessSize);

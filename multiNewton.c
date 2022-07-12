@@ -8,8 +8,6 @@
 #include <math.h>
 #include "multiNewton.h"
 #include "multiHorner.h"
-#include "vecHorner.h"
-#include "vec_derivative.h"
 #include "derivative.h"
 #include "reading.h"
 
@@ -87,15 +85,14 @@ double* multiGuess(Polynomial_t poly, double convCrit) {
     double* oldXGuess = (double*)malloc(sizeof(double) * 2);
     double* diff = (double*)malloc(sizeof(double) * 2);
     double* oldDiff = (double*)malloc(sizeof(double) * 2);
-    // printf("1\n");
+
     for (int i = 0; i < 2; i++){
         xGuess[i] = (double) rand() / (double) rand();
-        printf("%lf", xGuess[i]);
         oldXGuess[i] = 0;
         diff[i] = xGuess[i];
         oldDiff[i] = 0;
     }
-    // printf("2\n");
+    
     Polynomial_t newPoly = poly;
     Polynomial_t polyDeriv = vec_differentiatePoly(poly);
 
@@ -104,18 +101,17 @@ double* multiGuess(Polynomial_t poly, double convCrit) {
         bool cond = true;
         bool firstLoop = true;
         do {
-            // printf("3\n");
             bool noRoots = true;
-            double* polyGuess = vecEvaluate(newPoly, xGuess);
-            double* polyDerivGuess = vecEvaluate(polyDeriv, xGuess);
-            // printf("4\n");
+            double* polyGuess = multiEvaluate(newPoly, xGuess, 2);
+            double* polyDerivGuess = multiEvaluate(polyDeriv, xGuess, 2);
+            
             for (int j = 0; j < 2; j++) {
                 oldXGuess[j] = xGuess[j];
                 xGuess[j] -= polyGuess[j] / polyDerivGuess[j];
                 oldDiff[j] = diff[j];
                 diff[j] = fabs(xGuess[j] - oldXGuess[j]);
             }
-            // printf("5\n");
+            
             // printf("guess: %lf, diff: %lf\n", xGuess, fabs(xGuess - oldXGuess));
 
             // for (int j = 0; j < 2; j++) {
@@ -128,7 +124,7 @@ double* multiGuess(Polynomial_t poly, double convCrit) {
                     break;
                 }
             }
-            // printf("6\n");
+            
             if (noRoots) {
                 return roots;
             }
@@ -136,8 +132,6 @@ double* multiGuess(Polynomial_t poly, double convCrit) {
             cond = diff[0] > convCrit && diff[1] > convCrit;
             firstLoop = false;
         } while (cond);
-        // roots[i] = xGuess[i];
-        // printf("7\n");
         freePoly(&newPoly);
         freePoly(&polyDeriv);
 

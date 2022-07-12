@@ -9,19 +9,19 @@
 
 /*--------------------------------------------------------------------*/
 
-double* vecEvaluate(Polynomial_t poly, double* x) {
+double* vecEvaluate(Polynomial_t poly, double* x, int guessSize) {
   
-    double* solution = (double*)malloc(sizeof(x)); 
+    double* solution = (double*)malloc(sizeof(double) * guessSize); 
 
     // declare vector registers
-    vfloat64m1_t va, vb, vc;
+    vfloat64m1_t va, vb, vSolution;
 
-    size_t avl = poly.degree;
+    size_t avl = guessSize;
+    // printf("degree: %d, avl: %zu\n", poly.degree, avl);
 
     for (size_t vl; (vl = vsetvl_e32m1(avl)) > 0; avl -= vl) {
-
-        // Filling the vector vc with the highest coefficient(s)
-        vc = vfmv_v_f_f64m1(poly.coefficients[poly.degree], vl);
+        // Filling the vector vSolution with the highest coefficient(s)
+        vSolution = vfmv_v_f_f64m1(poly.coefficients[poly.degree], vl);
 
         // This is the vector with our guesses (x vector).
         vb = vle64_v_f64m1(x, vl); 
@@ -32,13 +32,11 @@ double* vecEvaluate(Polynomial_t poly, double* x) {
             va = vfmv_v_f_f64m1(poly.coefficients[i-1], vl); 
 
             // We are multiply-adding this along with the x vector (our guesses).
-            vc = vfmadd_vv_f64m1(vc, vb, va, vl); 
-            
+            vSolution = vfmadd_vv_f64m1(vSolution, vb, va, vl); 
         }
 
         // We are storing our results in the solution array.
-       vse64_v_f64m1(&solution[poly.degree - avl], vc, vl);  
-
+        vse64_v_f64m1(&solution[guessSize - avl], vSolution, vl);
     } 
 
     return solution;
