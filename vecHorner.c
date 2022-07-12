@@ -37,7 +37,7 @@ double* vecEvaluate(Polynomial_t poly, double* x) {
         }
 
         // We are storing our results in the solution array.
-       vse64_v_f64m1(solution[poly.degree - avl], vc, vl);  
+       vse64_v_f64m1(&solution[poly.degree - avl], vc, vl);  
 
     } 
 
