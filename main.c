@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include "reading.h"
 #include "newton.h"
-#include "multiNewton.h"
+// #include "multiNewton.h"
 #include "derivative.h"
 
 /*--------------------------------------------------------------------*/
@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
     double crit_conversion = strtod(argv[1], NULL);
     
     Polynomial_t poly = readPoly();
-    double* roots = multiGuess(poly, crit_conversion);
+    double* roots = guess(poly, crit_conversion);
 
     if (roots[0] == DBL_MAX) {
         printf("Your polynomial has no roots.\n");

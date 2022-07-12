@@ -15,16 +15,6 @@
 
 // performs long division on a polynomial dividend and a linear
 // polynomial divisor and returns a polynomial quotient
-
-
-static double RandomReal(double low, double high) {
-  double d;
-
-  d = (double) rand() / ((double) RAND_MAX + 1);
-  return (low + d * (high - low));
-}
-
-
 static Polynomial_t longDiv(Polynomial_t poly, double root) {
     int n = poly.degree - 1;
     double* a_n = (double*)malloc(sizeof(double) * (n + 1));
@@ -64,16 +54,6 @@ double* guess(Polynomial_t poly, double convCrit) {
     for (int i = 0; i < n; i++) {
       roots[i] = DBL_MAX;
     }
-
-    // double bigCoeff = 0;
-    // for (int i = 0; i < poly.degree; i++){
-    //     if (abs(poly.coefficients[i]) > abs(bigCoeff)) {
-    //         bigCoeff = poly.coefficients[i];
-    //     }
-    // }
-    // bigCoeff = abs(bigCoeff);
-
-    // double xGuess = RandomReal((-bigCoeff-1), (bigCoeff+1));
 
     double xGuess = (double) rand()/ (double) rand();
     double oldXGuess = 0;
