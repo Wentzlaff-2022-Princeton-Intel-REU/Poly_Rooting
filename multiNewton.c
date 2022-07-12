@@ -90,6 +90,7 @@ double* multiGuess(Polynomial_t poly, double convCrit) {
     // printf("1\n");
     for (int i = 0; i < 2; i++){
         xGuess[i] = (double) rand() / (double) rand();
+        printf("%lf", xGuess[i]);
         oldXGuess[i] = 0;
         diff[i] = xGuess[i];
         oldDiff[i] = 0;
