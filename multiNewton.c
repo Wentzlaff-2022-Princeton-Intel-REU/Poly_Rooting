@@ -94,7 +94,7 @@ double* multiGuess(Polynomial_t poly, double convCrit) {
     }
     
     Polynomial_t newPoly = poly;
-    Polynomial_t polyDeriv = vec_differentiatePoly(poly);
+    Polynomial_t polyDeriv = differentiatePoly(poly);
 
     int i = 0;
     while (newPoly.degree > 0) {
@@ -102,8 +102,8 @@ double* multiGuess(Polynomial_t poly, double convCrit) {
         bool firstLoop = true;
         do {
             bool noRoots = true;
-            double* polyGuess = multiEvaluate(newPoly, xGuess, 2);
-            double* polyDerivGuess = multiEvaluate(polyDeriv, xGuess, 2);
+            double* polyGuess = multiEvaluate(newPoly, xGuess);
+            double* polyDerivGuess = multiEvaluate(polyDeriv, xGuess);
             
             for (int j = 0; j < 2; j++) {
                 oldXGuess[j] = xGuess[j];
@@ -144,7 +144,7 @@ double* multiGuess(Polynomial_t poly, double convCrit) {
                 i++;
             }
         }
-        polyDeriv = vec_differentiatePoly(newPoly);
+        polyDeriv = differentiatePoly(newPoly);
     }
     freePoly(&newPoly);
     freePoly(&polyDeriv);
