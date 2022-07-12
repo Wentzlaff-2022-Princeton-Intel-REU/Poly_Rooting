@@ -8,7 +8,7 @@
 #include <math.h>
 #include <riscv_vector.h>
 #include "vec_newton.h"
-#include "vecHorner.h"
+#include "vec_horner.h"
 #include "vec_derivative.h"
 #include "reading.h"
 
@@ -29,7 +29,7 @@ static Polynomial_t longDiv(Polynomial_t poly, double root) {
         a_n[i - 1] = poly.coefficients[i] + root * a_n[i];
     }
 
-    printf("root: %.16lf, diff: %.16lf\n", root, (poly.coefficients[0] + root * a_n[0]));
+    // printf("root: %.16lf, diff: %.16lf\n", root, (poly.coefficients[0] + root * a_n[0]));
     if (fabs(poly.coefficients[0] + root * a_n[0]) > min) {
         return poly;
     }
@@ -95,8 +95,8 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
         bool firstLoop = true;
         do {
             // bool noRoots = true;
-            double* polyGuess = vecEvaluate(newPoly, xGuess, guessSize);
-            double* polyDerivGuess = vecEvaluate(polyDeriv, xGuess, guessSize);
+            double* polyGuess = vec_evaluate(newPoly, xGuess, guessSize);
+            double* polyDerivGuess = vec_evaluate(polyDeriv, xGuess, guessSize);
 
             vfloat64m1_t ve, vf, ones;
             ones = vfmv_v_f_f64m1(1, guessSize);
@@ -164,7 +164,6 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
             }
         }
         polyDeriv = vec_differentiatePoly(newPoly);
-        printf("degree: %d\n", newPoly.degree);
     }
     //freePoly(&newPoly);
     //freePoly(&polyDeriv);
