@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <riscv_vector.h>
 
-
 /*--------------------------------------------------------------------*/
 
 double* vecEvaluate(Polynomial_t poly, double* x, int guessSize) {
@@ -17,7 +16,6 @@ double* vecEvaluate(Polynomial_t poly, double* x, int guessSize) {
     vfloat64m1_t va, vb, vSolution;
 
     size_t avl = guessSize;
-    // printf("degree: %d, avl: %zu\n", poly.degree, avl);
 
     for (size_t vl; (vl = vsetvl_e32m1(avl)) > 0; avl -= vl) {
         // Filling the vector vSolution with the highest coefficient(s)

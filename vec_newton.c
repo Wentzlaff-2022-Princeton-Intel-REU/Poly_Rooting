@@ -73,7 +73,6 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
 
     vfloat64m1_t va, vb, vc, vd;
 
-    
     for (int i = 0; i < guessSize; i++){
         xGuess[i] = (double) rand() / (double) rand();
         // oldXGuess[i] = 0;
@@ -86,28 +85,25 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
     vc = vle64_v_f64m1(xGuess, guessSize);
     vd = vfmv_v_f_f64m1(0, guessSize);
 
-    // printf("2\n");
     Polynomial_t newPoly = poly;
     Polynomial_t polyDeriv = vec_differentiatePoly(poly);
 
     int i = 0;
     while (newPoly.degree > 0) {
-        bool cond = true;
+        // bool cond = true;
         long cond1 = 0;
         bool firstLoop = true;
         do {
-            // printf("3\n");
-            bool noRoots = true;
+            // bool noRoots = true;
             double* polyGuess = vecEvaluate(newPoly, xGuess, guessSize);
             double* polyDerivGuess = vecEvaluate(polyDeriv, xGuess, guessSize);
 
             vfloat64m1_t ve, vf, ones;
-            ones = vfmv_v_f_f64m1(0, guessSize);
+            ones = vfmv_v_f_f64m1(1, guessSize);
             ve = vle64_v_f64m1(polyGuess, guessSize);
             vf = vle64_v_f64m1(polyDerivGuess, guessSize);
             vf = vfdiv_vv_f64m1(ones, vf, guessSize);
 
-            // printf("4\n");
             // for (int j = 0; j < 2; j++) {
             //     oldXGuess[j] = xGuess[j];
             //     xGuess[j] -= polyGuess[j] / polyDerivGuess[j];
@@ -122,7 +118,6 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
 
             vse64_v_f64m1(xGuess, va, guessSize);  
 
-            // printf("5\n");
             // printf("guess: %lf, diff: %lf\n", xGuess, fabs(xGuess - oldXGuess));
 
             // for (int j = 0; j < 2; j++) {
@@ -143,7 +138,6 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
             vb3 = vmand_mm_b64(vb1, vb2, guessSize);
             long noRoots1 = vfirst_m_b64(vmnot_m_b64(vb3, guessSize), guessSize);
 
-            // printf("6\n");
             if (!firstLoop && noRoots1 == -1) {
                 return roots;
             }
@@ -157,8 +151,6 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
 
             firstLoop = false;
         } while (cond1 == -1);
-        // roots[i] = xGuess[i];
-        // printf("7\n");
         //freePoly(&newPoly);
         //freePoly(&polyDeriv);
 
@@ -172,6 +164,7 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
             }
         }
         polyDeriv = vec_differentiatePoly(newPoly);
+        printf("degree: %d\n", newPoly.degree);
     }
     //freePoly(&newPoly);
     //freePoly(&polyDeriv);
