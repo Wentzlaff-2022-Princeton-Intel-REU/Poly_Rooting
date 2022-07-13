@@ -6,11 +6,14 @@
 % Please look at the function buildPoly, which is used to create a random
 % polynomial within the given constraints. 
 
-fileID = fopen('Polynomials.txt','w');
+fileID = fopen('../data/polynomials.txt','w');
 for i = 1:50
-    array = buildPoly();
-    fmt=[repmat(' %18f',1,numel(array))]; % Modify this line as needed to adjust the precision of the coefficients.
-    fprintf(fileID,fmt,array);
+    [n,c,r] = buildPoly();
+    fprintf(fileID, '%d', n);
+    fmt=[repmat(' %.18f', 1, n + 1)]; % Modify this line as needed to adjust the precision of the coefficients.
+    fprintf(fileID, fmt, c);
+    fmt=[repmat(' %.18f', 1, n)]; % Modify this line as needed to adjust the precision of the coefficients.
+    fprintf(fileID, fmt, r);
     fprintf(fileID, '\n');
 end
 
