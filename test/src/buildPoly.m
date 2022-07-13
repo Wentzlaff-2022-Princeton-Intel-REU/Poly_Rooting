@@ -12,11 +12,10 @@ tooSmallGap = 1;
 while (tooSmallGap == 1)
 % We first try building one polynomial right here. 
 
-
-
 n = randi(10); % This is the degree of our polynomial.
 
 r_i = -5 + (5+5)*rand(1,n); % We generate n random solutions for our polynomial. 
+r_i = sort(r_i) % We sort the array so we can check if any two numbers are too close. 
 
 k = -5 + (5+5)*rand; % We generate random number k.
 
@@ -24,8 +23,8 @@ k = -5 + (5+5)*rand; % We generate random number k.
 
 for i = 1:length(r_i)-1;
  
-    if (r_i(i+1) - r_i(i) < 0.001)
-       tooSmallGap = 0;
+    if (r_i(i+1) - r_i(i) < 0.001) % This could also be accomplished with the diff() function.
+       tooSmallGap = 0; 
        break;
     end
     
@@ -37,7 +36,6 @@ end
 % With this while loop, we have ensured that the polynomial's solutions are
 % not too close. 
 
-p = k*poly(r_i);
-
+p = k.*poly(r_i);
 
 end
