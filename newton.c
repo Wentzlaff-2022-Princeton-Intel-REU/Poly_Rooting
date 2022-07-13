@@ -9,30 +9,10 @@
 #include <stdlib.h>
 #include "derivative.h"
 #include "horner.h"
+#include "longDiv.h"
 #include "newton.h"
 
 /*--------------------------------------------------------------------*/
-
-// performs long division on a polynomial dividend and a linear
-// polynomial divisor and returns a polynomial quotient
-static Polynomial_t longDiv(Polynomial_t poly, double root) {
-    int n = poly.degree - 1;
-    double* a_n = (double*)malloc(sizeof(double) * (n + 1));
-    if (a_n == NULL) {
-        exit(2);
-    }
-
-    a_n[n] = poly.coefficients[n + 1];
-    for (int i = n; i > 0; i--) {
-        a_n[i - 1] = poly.coefficients[i] + root * a_n[i];
-    }
-
-    Polynomial_t quotient;
-    quotient.degree = n;
-    quotient.coefficients = a_n;
-   
-    return quotient;
-}
 
 // the compare function for double values
 static int compare(const void * a, const void * b) {
@@ -84,7 +64,7 @@ double* guess(Polynomial_t poly, double convCrit) {
         freePoly(&newPoly);
         freePoly(&polyDeriv);
 
-        newPoly = longDiv(newPoly, xGuess);
+        newPoly = longDiv(newPoly, xGuess, convCrit);
         polyDeriv = differentiatePoly(newPoly);
     }
     freePoly(&newPoly);
