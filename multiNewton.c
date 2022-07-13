@@ -13,6 +13,7 @@
 #include "multiNewton.h"
 #include "multiHorner.h"
 #include "reading.h"
+#define GUESS_SIZE 2
 
 /*--------------------------------------------------------------------*/
 
@@ -36,12 +37,12 @@ double* multiNewton(Polynomial_t poly, double convCrit) {
       roots[i] = DBL_MAX;
     }
 
-    double* xGuess = (double*)malloc(sizeof(double) * 2);
-    double* oldXGuess = (double*)malloc(sizeof(double) * 2);
-    double* diff = (double*)malloc(sizeof(double) * 2);
-    double* oldDiff = (double*)malloc(sizeof(double) * 2);
+    double* xGuess = (double*)malloc(sizeof(double) * GUESS_SIZE);
+    double* oldXGuess = (double*)malloc(sizeof(double) * GUESS_SIZE);
+    double* diff = (double*)malloc(sizeof(double) * GUESS_SIZE);
+    double* oldDiff = (double*)malloc(sizeof(double) * GUESS_SIZE);
 
-    for (int i = 0; i < 2; i++){
+    for (int i = 0; i < GUESS_SIZE; i++){
         xGuess[i] = (double) rand() / (double) rand();
         oldXGuess[i] = 0;
         diff[i] = xGuess[i];
@@ -60,7 +61,7 @@ double* multiNewton(Polynomial_t poly, double convCrit) {
             double* polyGuess = multiHorner(newPoly, xGuess);
             double* polyDerivGuess = multiHorner(polyDeriv, xGuess);
             
-            for (int j = 0; j < 2; j++) {
+            for (int j = 0; j < GUESS_SIZE; j++) {
                 oldXGuess[j] = xGuess[j];
                 xGuess[j] -= polyGuess[j] / polyDerivGuess[j];
                 oldDiff[j] = diff[j];
@@ -69,11 +70,11 @@ double* multiNewton(Polynomial_t poly, double convCrit) {
             
             // printf("guess: %lf, diff: %lf\n", xGuess, fabs(xGuess - oldXGuess));
 
-            // for (int j = 0; j < 2; j++) {
+            // for (int j = 0; j < GUESS_SIZE; j++) {
             //     printf("guess: %lf, oldGuess: %lf, oldDiff: %lf, diff: %lf\n", xGuess[j], oldXGuess[j], oldDiff[j], diff[j]);
             // }
 
-            for (int j = 0; j < 2; j++) {
+            for (int j = 0; j < GUESS_SIZE; j++) {
                 noRoots = !firstLoop && diff[j] > oldDiff[j] && fabs(diff[j] - oldDiff[j]) > 1;
                 if (!noRoots) {
                     break;
@@ -90,7 +91,7 @@ double* multiNewton(Polynomial_t poly, double convCrit) {
         freePoly(&newPoly);
         freePoly(&polyDeriv);
 
-        for (int j = 0; j < 2; j++) {
+        for (int j = 0; j < GUESS_SIZE; j++) {
             int degree = newPoly.degree;
             newPoly = longDiv(newPoly, xGuess[j], convCrit);
 

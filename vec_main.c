@@ -5,6 +5,7 @@
 #include <float.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "freePoly.h"
 #include "reading.h"
 #include "vec_newton.h"
 
