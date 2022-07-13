@@ -1,0 +1,23 @@
+#!/usr/bin/env node
+
+const path = require('node:path');
+const fs = require('node:fs');
+const readline = require('node:readline');
+
+async function processLineByLine(fn) {
+    const fileStream = fs.createReadStream(fn);
+    const rl = readline.createInterface({
+        input: fileStream,
+        crlfDelay: Infinity,
+    });
+    for await (const line of rl) {
+        const sp = line.split(' ').filter((s) => s).map((s) => +s);
+        const [n] = sp.splice(0, 1);
+        const coeffs = sp.splice(0, n + 1);
+        const roots = sp;
+        if (roots.length !== n)
+            throw new Error(`Wrong test case ${line}`);
+    }
+}
+
+processLineByLine(path.join(__dirname, 'data', 'polynomials.txt'));
