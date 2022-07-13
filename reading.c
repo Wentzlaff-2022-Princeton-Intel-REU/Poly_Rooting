@@ -8,7 +8,7 @@
 
 /*--------------------------------------------------------------------*/
 
-Polynomial_t readPoly(void) {
+Polynomial_t reading(void) {
     int n = 0;
     scanf("%d", &n);
 

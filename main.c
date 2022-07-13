@@ -20,8 +20,8 @@ int main(int argc, char *argv[]) {
 
     double crit_conversion = strtod(argv[1], NULL);
     
-    Polynomial_t poly = readPoly();
-    double* roots = guess(poly, crit_conversion);
+    Polynomial_t poly = reading();
+    double* roots = newton(poly, crit_conversion);
 
     if (roots[0] == DBL_MAX) {
         printf("Your polynomial has no roots.\n");

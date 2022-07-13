@@ -7,7 +7,7 @@
 
 /*--------------------------------------------------------------------*/
 
-Polynomial_t differentiatePoly(Polynomial_t myPoly) {
+Polynomial_t derivative(Polynomial_t myPoly) {
 
     Polynomial_t differentiatedPoly;
 

@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "derivative.h"
+#include "freePoly.h"
 #include "longDiv.h"
 #include "multiNewton.h"
 #include "multiHorner.h"
@@ -25,7 +26,7 @@ static int compare(const void * a, const void * b) {
     return 0;  
 }
 
-double* multiGuess(Polynomial_t poly, double convCrit) {
+double* multiNewton(Polynomial_t poly, double convCrit) {
     double* roots = (double*)malloc(sizeof(double) * poly.degree);
     if (roots == NULL) {
         exit(2);
@@ -48,7 +49,7 @@ double* multiGuess(Polynomial_t poly, double convCrit) {
     }
     
     Polynomial_t newPoly = poly;
-    Polynomial_t polyDeriv = differentiatePoly(poly);
+    Polynomial_t polyDeriv = derivative(poly);
 
     int i = 0;
     while (newPoly.degree > 0) {
@@ -56,8 +57,8 @@ double* multiGuess(Polynomial_t poly, double convCrit) {
         bool firstLoop = true;
         do {
             bool noRoots = true;
-            double* polyGuess = multiEvaluate(newPoly, xGuess);
-            double* polyDerivGuess = multiEvaluate(polyDeriv, xGuess);
+            double* polyGuess = multiHorner(newPoly, xGuess);
+            double* polyDerivGuess = multiHorner(polyDeriv, xGuess);
             
             for (int j = 0; j < 2; j++) {
                 oldXGuess[j] = xGuess[j];
@@ -98,7 +99,7 @@ double* multiGuess(Polynomial_t poly, double convCrit) {
                 i++;
             }
         }
-        polyDeriv = differentiatePoly(newPoly);
+        polyDeriv = derivative(newPoly);
     }
     freePoly(&newPoly);
     freePoly(&polyDeriv);

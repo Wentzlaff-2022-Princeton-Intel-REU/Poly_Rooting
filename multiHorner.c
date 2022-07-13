@@ -8,7 +8,7 @@
 
 /*--------------------------------------------------------------------*/
 
-double* multiEvaluate(Polynomial_t poly, double* guesses) {
+double* multiHorner(Polynomial_t poly, double* guesses) {
     double* solution = (double*)malloc(sizeof(double) * GUESS_SIZE);
     
     for (int i = 0; i < GUESS_SIZE; i++) {

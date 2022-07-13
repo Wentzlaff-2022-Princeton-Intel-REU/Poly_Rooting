@@ -1,5 +1,4 @@
 #pragma once
-
 /*------------------------------------------------------------*/
 /* polynomial.h                                               */
 /*------------------------------------------------------------*/
@@ -11,6 +10,3 @@ typedef struct Polynomial {
     int degree;
     double* coefficients;
 } Polynomial_t;
-
-// frees memory of the coefficient array
-void freePoly(Polynomial_t* poly);

@@ -9,7 +9,7 @@
 
 /*--------------------------------------------------------------------*/
 
-double* vec_evaluate(Polynomial_t poly, double* x, int guessSize) {
+double* vec_horner(Polynomial_t poly, double* x, int guessSize) {
   
     double* solution = (double*)malloc(sizeof(double) * guessSize); 
 

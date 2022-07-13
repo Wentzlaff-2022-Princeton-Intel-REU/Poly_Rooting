@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "freePoly.h"
 #include "longDiv.h"
 #include "vec_derivative.h"
 #include "vec_horner.h"
@@ -25,7 +26,7 @@ static int compare(const void * a, const void * b) {
     return 0;  
 }
 
-double* vec_guess(Polynomial_t poly, double convCrit) {
+double* vec_newton(Polynomial_t poly, double convCrit) {
     double* roots = (double*)malloc(sizeof(double) * poly.degree);
     if (roots == NULL) {
         exit(2);
@@ -60,7 +61,7 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
     vd = vfmv_v_f_f64m1(0, guessSize);
 
     Polynomial_t newPoly = poly;
-    Polynomial_t polyDeriv = vec_differentiatePoly(poly);
+    Polynomial_t polyDeriv = vec_derivative(poly);
 
     int i = 0;
     while (newPoly.degree > 0) {
@@ -69,8 +70,8 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
         bool firstLoop = true;
         do {
             // bool noRoots = true;
-            double* polyGuess = vec_evaluate(newPoly, xGuess, guessSize);
-            double* polyDerivGuess = vec_evaluate(polyDeriv, xGuess, guessSize);
+            double* polyGuess = vec_horner(newPoly, xGuess, guessSize);
+            double* polyDerivGuess = vec_horner(polyDeriv, xGuess, guessSize);
 
             vfloat64m1_t ve, vf, ones;
             ones = vfmv_v_f_f64m1(1, guessSize);
@@ -137,7 +138,7 @@ double* vec_guess(Polynomial_t poly, double convCrit) {
                 i++;
             }
         }
-        polyDeriv = vec_differentiatePoly(newPoly);
+        polyDeriv = vec_derivative(newPoly);
     }
     //freePoly(&newPoly);
     //freePoly(&polyDeriv);

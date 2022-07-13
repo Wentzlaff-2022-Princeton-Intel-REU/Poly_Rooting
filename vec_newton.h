@@ -9,4 +9,4 @@
 
 // Uses Newton's method to produce successively better approximations to
 // the roots (or zeroes) of a real-valued function.
-double* vec_guess(Polynomial_t poly, double convCrit);
+double* vec_newton(Polynomial_t poly, double convCrit);

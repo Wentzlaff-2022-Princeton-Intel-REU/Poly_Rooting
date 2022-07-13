@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "derivative.h"
+#include "freePoly.h"
 #include "horner.h"
 #include "longDiv.h"
 #include "newton.h"
@@ -24,7 +25,7 @@ static int compare(const void * a, const void * b) {
     return 0;  
 }
 
-double* guess(Polynomial_t poly, double convCrit) {
+double* newton(Polynomial_t poly, double convCrit) {
     int n = poly.degree;
     double* roots = (double*)malloc(sizeof(double) * n);
     if (roots == NULL) {
@@ -41,14 +42,14 @@ double* guess(Polynomial_t poly, double convCrit) {
     double oldDiff = 0;
 
     Polynomial_t newPoly = poly;
-    Polynomial_t polyDeriv = differentiatePoly(poly);
+    Polynomial_t polyDeriv = derivative(poly);
     
     for (int i = 0; i < n; i++) {
       printf("i = %d\n", i);
       bool firstLoop = true;
         do { 
           oldXGuess = xGuess;
-          xGuess -= evaluate(newPoly, xGuess) / evaluate(polyDeriv, xGuess);
+          xGuess -= horner(newPoly, xGuess) / horner(polyDeriv, xGuess);
           oldDiff = diff;
           diff = fabs(xGuess - oldXGuess);
          // printf("guess: %lf, oldGuess: %lf, oldDiff: %lf, diff: %lf\n", xGuess, oldXGuess, oldDiff, diff);
@@ -65,7 +66,7 @@ double* guess(Polynomial_t poly, double convCrit) {
         freePoly(&polyDeriv);
 
         newPoly = longDiv(newPoly, xGuess, convCrit);
-        polyDeriv = differentiatePoly(newPoly);
+        polyDeriv = derivative(newPoly);
     }
     freePoly(&newPoly);
     freePoly(&polyDeriv);

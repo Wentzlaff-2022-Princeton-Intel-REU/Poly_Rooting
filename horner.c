@@ -6,7 +6,7 @@
 
 /*--------------------------------------------------------------------*/
 
-double evaluate(Polynomial_t poly, double guesses) {
+double horner(Polynomial_t poly, double guesses) {
     double solution = poly.coefficients[poly.degree];
  
     for(int i = poly.degree; i > 0; i--) {
