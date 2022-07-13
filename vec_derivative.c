@@ -15,13 +15,11 @@ Polynomial_t vec_differentiatePoly(Polynomial_t myPoly) {
 
     //create new polynomial to represent the differentiated polynomial
     Polynomial_t differentiatedPoly;
-    double* coes = (double*)malloc(sizeof(double) * (myPoly.degree + 1 - 1));  
-    if(coes == NULL){
+    differentiatedPoly.coefficients = (double*)malloc(sizeof(double) * (myPoly.degree + 1 - 1));  
+    if(differentiatedPoly.coefficients == NULL){
         exit(2);
     }
-    
-    //initialize coefficients and degree
-    differentiatedPoly.coefficients = coes;
+    //initialize degree
     differentiatedPoly.degree = myPoly.degree - 1;
 
     //active vector length is the degree of the original polynomial
@@ -62,7 +60,7 @@ Polynomial_t vec_differentiatePoly(Polynomial_t myPoly) {
         results += vl;
     }
 
-    //free(indices);
+    free(indices);v
 
     return differentiatedPoly;
 }
