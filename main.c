@@ -4,10 +4,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "reading.h"
+// #include "multiNewton.h"
 #include "newton.h"
-#include "multiNewton.h"
-#include "derivative.h"
+#include "reading.h"
 
 /*--------------------------------------------------------------------*/
 

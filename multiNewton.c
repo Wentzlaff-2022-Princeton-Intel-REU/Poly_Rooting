@@ -1,46 +1,34 @@
 /*--------------------------------------------------------------------*/
-/* newton.c                                                           */
+/* multiNewton.c                                                           */
 /*--------------------------------------------------------------------*/
 
+#include <math.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <math.h>
+#include "derivative.h"
 #include "multiNewton.h"
 #include "multiHorner.h"
-#include "derivative.h"
 #include "reading.h"
 
 /*--------------------------------------------------------------------*/
 
-// performs long division on a polynomial dividend and a linear
-// polynomial divisor and returns a polynomial quotient
-
-
-static double RandomReal(double low, double high) {
-  double d;
-
-  d = (double) rand() / ((double) RAND_MAX + 1);
-  return (low + d * (high - low));
-}
-
-
-static Polynomial_t longDiv(Polynomial_t poly, double root) {
+/* performs long division on a polynomial dividend and a linear
+polynomial divisor and returns a polynomial quotient */
+static Polynomial_t longDiv(Polynomial_t poly, double root, double diff) {
     int n = poly.degree - 1;
     double* a_n = (double*)malloc(sizeof(double) * (n + 1));
     if (a_n == NULL) {
         exit(2);
     }
 
-    double min = 1e-14;
     a_n[n] = poly.coefficients[n + 1];
     for (int i = n; i > 0; i--) {
         a_n[i - 1] = poly.coefficients[i] + root * a_n[i];
-        // min /= a_n[i - 1];
     }
 
-    printf("root: %.16lf, diff: %.16lf\n", root, (poly.coefficients[0] + root * a_n[0]));
-    if (fabs(poly.coefficients[0] + root * a_n[0]) > min) {
+    // printf("root: %.16lf, diff: %.16lf\n", root, (poly.coefficients[0] + root * a_n[0]));
+    if (fabs(poly.coefficients[0] + root * a_n[0]) > diff) {
         return poly;
     }
 
@@ -70,16 +58,6 @@ double* multiGuess(Polynomial_t poly, double convCrit) {
     for (int i = 0; i < poly.degree; i++) {
       roots[i] = DBL_MAX;
     }
-
-    // double bigCoeff = 0;
-    // for (int i = 0; i < poly.degree; i++){
-    //     if (abs(poly.coefficients[i]) > abs(bigCoeff)) {
-    //         bigCoeff = poly.coefficients[i];
-    //     }
-    // }
-    // bigCoeff = abs(bigCoeff);
-
-    // double xGuess = RandomReal((-bigCoeff-1), (bigCoeff+1));
 
     double* xGuess = (double*)malloc(sizeof(double) * 2);
     double* oldXGuess = (double*)malloc(sizeof(double) * 2);
@@ -137,7 +115,7 @@ double* multiGuess(Polynomial_t poly, double convCrit) {
 
         for (int j = 0; j < 2; j++) {
             int degree = newPoly.degree;
-            newPoly = longDiv(newPoly, xGuess[j]);
+            newPoly = longDiv(newPoly, xGuess[j], convCrit);
 
             if (degree != newPoly.degree) {
                 roots[i] = xGuess[j];
