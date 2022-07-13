@@ -60,7 +60,7 @@ Polynomial_t vec_differentiatePoly(Polynomial_t myPoly) {
         results += vl;
     }
 
-    free(indices);v
+    free(indices);
 
     return differentiatedPoly;
 }
