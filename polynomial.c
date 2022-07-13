@@ -7,6 +7,7 @@
 #include "polynomial.h"
 
 /*--------------------------------------------------------------------*/
+
 void freePoly(Polynomial_t* poly) {
     free(poly->coefficients);
 }

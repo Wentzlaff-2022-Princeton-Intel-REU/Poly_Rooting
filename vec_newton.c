@@ -2,15 +2,15 @@
 /* vec_newton.c                                                       */
 /*--------------------------------------------------------------------*/
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
+#include <float.h>
 #include <math.h>
 #include <riscv_vector.h>
-#include "vec_newton.h"
-#include "vec_horner.h"
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "vec_derivative.h"
-#include "reading.h"
+#include "vec_horner.h"
+#include "vec_newton.h"
 
 /*--------------------------------------------------------------------*/
 

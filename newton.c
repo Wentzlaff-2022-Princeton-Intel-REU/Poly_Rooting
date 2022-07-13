@@ -2,14 +2,14 @@
 /* newton.c                                                           */
 /*--------------------------------------------------------------------*/
 
+#include <float.h>
+#include <math.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <math.h>
-#include "newton.h"
-#include "horner.h"
 #include "derivative.h"
-#include "reading.h"
+#include "horner.h"
+#include "newton.h"
 
 /*--------------------------------------------------------------------*/
 

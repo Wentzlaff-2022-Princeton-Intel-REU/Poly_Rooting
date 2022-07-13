@@ -2,6 +2,7 @@
 /* main.c                                                             */
 /*--------------------------------------------------------------------*/
 
+#include <float.h>
 #include <stdio.h>
 #include <stdlib.h>
 // #include "multiNewton.h"
