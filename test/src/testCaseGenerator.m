@@ -6,7 +6,7 @@
 % Please look at the function buildPoly, which is used to create a random
 % polynomial within the given constraints. 
 
-fileID = fopen('../data/polynomials.txt','w');
+fileID = fopen('../data/complex.txt','w');
 for i = 1:50
     [n,c,r] = buildPoly();
     fprintf(fileID, '%d', n);

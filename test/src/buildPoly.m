@@ -7,12 +7,13 @@
 
 function [n,c,r] = buildPoly()
 
+% We first try building one polynomial right here. 
+
+n = randi([3,10]); % This is the degree of our polynomial.
+
 tooSmallGap = 1;
 
 while (tooSmallGap == 1)
-% We first try building one polynomial right here. 
-
-n = randi(10); % This is the degree of our polynomial.
 
 r = -5 + (5+5)*rand(1,n); % We generate n random solutions for our polynomial. 
 r = sort(r); % We sort the array so we can check if any two numbers are too close. 

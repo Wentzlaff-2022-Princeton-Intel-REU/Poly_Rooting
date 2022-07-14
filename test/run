@@ -7,7 +7,6 @@ const readline = require('node:readline');
 const child_process = require('node:child_process');
 
 const timeout = Symbol('timeout');
-const errored = Symbol('errored');
 
 process.on('uncaughtException', function (err) {
     if (err.code === 'EPIPE')
@@ -17,8 +16,9 @@ process.on('uncaughtException', function (err) {
 });
 
 const prog = process.argv[2];
-if (!prog) {
-    console.error('Usage: ./test/run <path/to/executable>');
+const suite = process.argv[3];
+if (!prog || !suite) {
+    console.error('Usage: ./test/run <path/to/executable> <suite>');
     process.exit(2);
 }
 fs.accessSync(prog, fs.constants.R_OK | fs.constants.X_OK);
@@ -32,8 +32,10 @@ function run(n, coeffs) {
             if (cp.signalCode === 'SIGABRT') {
                 resolve(timeout);
             } else if (err) {
-                resolve(errored);
+                resolve(cp.signalCode);
             } else {
+                if (process.env.VERBOSE)
+                    console.error(stdout, stderr);
                 const rst = stdout.split(/\s+/).filter((s) => s).map((s) => +s).filter((v) => !isNaN(v));
                 resolve(rst);
             }
@@ -56,14 +58,16 @@ function check(rst, roots) {
         console.log('Timeout');
         return false;
     }
-    if (rst === errored) {
-        console.log('Errored');
+    if (!Array.isArray(rst)) {
+        console.log(rst);
         return false;
     }
     if (!rst.length) {
-        console.log('No root found');
+        console.log('No root reported');
         return false;
     }
+    if (process.env.VERBOSE)
+        console.log('Desired:', roots, 'Actual:', rst);
     let goodRoots = 0, badRoots = 0;
     const numErrors = [];
     for (const e of rst) {
@@ -74,17 +78,17 @@ function check(rst, roots) {
             goodRoots++, numErrors.push(Math.abs(e - r));
     }
     if (!goodRoots) {
-        console.log(`${rst.length}/${roots.length} roots found but all bad`);
+        console.log(`${rst.length}/${roots.length} roots reported but all bad`);
         return false;
     }
     const maxErr = numErrors.reduce((a, b) => Math.max(a, b));
     const avgErr = numErrors.reduce((a, b) => a + b) / goodRoots;
     if (goodRoots < roots.length) {
-        console.log(`${rst.length} found, ${goodRoots}/${roots.length} valid, err:  ${avgErr} avg.  ${maxErr} max.`);
+        console.log(`${rst.length} reported, ${goodRoots} valid, err:  ${avgErr} avg.  ${maxErr} max.`);
         return false;
     }
     if (badRoots) {
-        console.log(`all ${roots.length} found but ${badRoots} fake, err:  ${avgErr} avg.  ${maxErr} max.`);
+        console.log(`all ${roots.length} found but ${badRoots} fake reported, err:  ${avgErr} avg.  ${maxErr} max.`);
         return false;
     }
     console.log(`all ${roots.length} found, err:  ${avgErr} avg.  ${maxErr} max.`);
@@ -118,4 +122,4 @@ async function processLineByLine(fn) {
     console.error(`Total Pass: ${pass} Total Fail: ${fail}`);
 }
 
-processLineByLine(path.join(__dirname, 'data', 'polynomials.txt'));
+processLineByLine(path.join(__dirname, 'data', `${suite}.txt`));
