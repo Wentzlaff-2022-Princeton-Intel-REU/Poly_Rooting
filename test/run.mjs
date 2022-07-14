@@ -19,8 +19,8 @@ process.on('uncaughtException', function (err) {
 
 const prog = process.argv[2];
 const suite = process.argv[3];
-if (!prog || !suite) {
-    console.error('Usage: ./test/run <path/to/executable> <suite>');
+if (process.argv.length !== 4 && process.argv.length !== 5) {
+    console.error('Usage: ./test/run <path/to/executable> <suite> [<testId>]');
     process.exit(2);
 }
 fs.accessSync(prog, fs.constants.R_OK | fs.constants.X_OK);
@@ -38,6 +38,7 @@ class TestCase {
         this.description = `Test #${this.testId} (n=${this.n}): `;
         this.stderr = '';
         this.stdout = '';
+        this.exitCode = -1;
         this.signalCode = '';
         this.reportedRoots = [];
         if (this.roots.length > this.n)
@@ -46,18 +47,17 @@ class TestCase {
 
     async run() {
         const rst = await new Promise((resolve, reject) => {
-            const cp = child_process.execFile(prog, ['1e-14'], {
-                timeout: 5000,
+            const cp = child_process.execFile(prog, ['1e-10'], {
+                timeout: 1000,
                 killSignal: 'SIGABRT',
             }, (err, stdout, stderr) => {
                 this.stdout = stdout;
                 this.stderr = stderr;
                 this.signalCode = cp.signalCode;
+                this.exitCode = cp.exitCode;
                 if (err) {
                     resolve(err);
                 } else {
-                    if (process.env.VERBOSE)
-                        console.error(stdout, stderr);
                     const rst = stdout.split(/\s+/).filter((s) => s).map((s) => +s).filter((v) => !isNaN(v));
                     resolve(rst);
                 }
@@ -74,6 +74,20 @@ class TestCase {
             }
         });
 
+        if (this.isConnected) {
+            console.log('========= STDERR =========');
+            console.log(this.stderr);
+            console.log('========= Exit Code =========');
+            if (this.signalCode)
+                console.log(''+this.exitCode, `(${this.signalCode})`);
+            else
+                console.log(''+this.exitCode);
+            console.log('========= STDOUT =========');
+            console.log(this.stdout);
+            console.log('========= Expected =========');
+            console.log(this.roots.join(' '));
+            console.log('========= Summary =========');
+        }
         if (this.signalCode === 'SIGABRT') {
             this.description += 'Timeout';
             this.isErrored = true;
@@ -93,7 +107,7 @@ class TestCase {
         let goodRoots = 0, badRoots = 0;
         const numErrors = [];
         for (const e of rst) {
-            const r = this.roots.find((r) => Math.abs(e - r) < 1e-10);
+            const r = this.roots.find((r) => Math.abs(e - r) < 1e-7);
             if (r === undefined)
                 badRoots++;
             else
@@ -133,7 +147,12 @@ async function processLineByLine(fn) {
     let testId = 1;
     let passed = 0, failed = 0, errored = 0;
     for await (const line of rl) {
+        if (process.argv[4] && testId !== +process.argv[4]) {
+            testId++;
+            continue;
+        }
         const tc = new TestCase(testId++, line);
+        tc.isConnected = !!process.argv[4];
         cases.push(tc);
         runners.push(limit(async () => {
             await tc.run();
