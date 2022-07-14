@@ -24,6 +24,15 @@ if (process.argv.length !== 4 && process.argv.length !== 5) {
     process.exit(2);
 }
 fs.accessSync(prog, fs.constants.R_OK | fs.constants.X_OK);
+let progFile = prog, progArgs = ['1e-10'], progTimeout = 1000;
+if (/RISC-V/.test(child_process.execFileSync('/usr/bin/file', ['-b', prog]))) {
+    const spike = process.env.SPIKE || '/usr/bin/spike';
+    const pk = process.env.PK || '/usr/bin/pk';
+    progArgs = [pk, prog, ...progArgs];
+    progFile = spike;
+    progTimeout = 10000;
+    console.error(`Notice: ${prog} is RISC-V program, running with spike`);
+}
 
 class TestCase {
     constructor(id, line) {
@@ -47,8 +56,8 @@ class TestCase {
 
     async run() {
         const rst = await new Promise((resolve, reject) => {
-            const cp = child_process.execFile(prog, ['1e-10'], {
-                timeout: 1000,
+            const cp = child_process.execFile(progFile, progArgs, {
+                timeout: progTimeout,
                 killSignal: 'SIGALRM',
             }, (err, stdout, stderr) => {
                 this.stdout = stdout;
