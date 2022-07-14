@@ -49,7 +49,7 @@ class TestCase {
         const rst = await new Promise((resolve, reject) => {
             const cp = child_process.execFile(prog, ['1e-10'], {
                 timeout: 1000,
-                killSignal: 'SIGABRT',
+                killSignal: 'SIGALRM',
             }, (err, stdout, stderr) => {
                 this.stdout = stdout;
                 this.stderr = stderr;
@@ -88,7 +88,7 @@ class TestCase {
             console.log(this.roots.join(' '));
             console.log('========= Summary =========');
         }
-        if (this.signalCode === 'SIGABRT') {
+        if (this.signalCode === 'SIGALRM') {
             this.description += 'Timeout';
             this.isErrored = true;
             return;
@@ -114,7 +114,7 @@ class TestCase {
                 goodRoots++, numErrors.push(Math.abs(e - r));
         }
         if (!goodRoots) {
-            this.description += `${rst.length}/${roots.length} roots reported but all bad`;
+            this.description += `${rst.length}/${this.roots.length} roots reported but all bad`;
             this.isFailed = true;
             return;
         }
