@@ -45,7 +45,7 @@ double* newton(Polynomial_t poly, double convCrit) {
     Polynomial_t polyDeriv = derivative(poly);
     
     for (int i = 0; i < n; i++) {
-      printf("i = %d\n", i);
+      fprintf(stderr, "i = %d\n", i);
       bool firstLoop = true;
         do { 
           oldXGuess = xGuess;
