@@ -60,6 +60,7 @@ Polynomial_t vec_derivative(Polynomial_t myPoly) {
         results += vl;
     }
 
+    indices -= myPoly.degree;
     free(indices);
 
     return differentiatedPoly;

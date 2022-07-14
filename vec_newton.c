@@ -140,8 +140,9 @@ double* vec_newton(Polynomial_t poly, double convCrit) {
         }
         polyDeriv = vec_derivative(newPoly);
     }
-    //freePoly(&newPoly);
-    //freePoly(&polyDeriv);
+    free(xGuess);
+    freePoly(&newPoly);
+    freePoly(&polyDeriv);
 
     qsort(roots, poly.degree, sizeof(double), compare);
     
