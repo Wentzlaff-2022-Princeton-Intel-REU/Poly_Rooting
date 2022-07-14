@@ -7,36 +7,35 @@
 
 function [n,c,r] = buildPoly()
 
-% We first try building one polynomial right here. 
+    % We first try building one polynomial right here. 
 
-n = randi([3,10]); % This is the degree of our polynomial.
+    n = randi([3,10]); % This is the degree of our polynomial.
 
-tooSmallGap = 1;
-
-while (tooSmallGap == 1)
-
-r = -5 + (5+5)*rand(1,n); % We generate n random solutions for our polynomial. 
-r = sort(r); % We sort the array so we can check if any two numbers are too close. 
-
-k = -5 + (5+5)*rand; % We generate random number k.
-
-% Here is a for-loop that checks and sees if any two numbers are too close.
-
-for i = 1:length(r)-1;
- 
-    if (r(i+1) - r(i) < 0.001) % This could also be accomplished with the diff() function.
-       tooSmallGap = 0; 
-       break;
-    end
-    
     tooSmallGap = 1;
-end
+    while (tooSmallGap == 1)
 
-end
+        r = -5 + (5+5)*rand(1,n); % We generate n random solutions for our polynomial. 
+        r = sort(r); % We sort the array so we can check if any two numbers are too close. 
 
-% With this while loop, we have ensured that the polynomial's solutions are
-% not too close. 
+        k = -5 + (5+5)*rand; % We generate random number k.
 
-c = k.*poly(r);
+        % Here is a for-loop that checks and sees if any two numbers are too close.
+
+        for i = 1:length(r)-1;
+
+            if (r(i+1) - r(i) < 0.001) % This could also be accomplished with the diff() function.
+                tooSmallGap = 1; 
+                break;
+            end
+
+            tooSmallGap = 0;
+        end
+
+    end
+
+    % With this while loop, we have ensured that the polynomial's solutions are
+    % not too close. 
+
+    c = k.*poly(r);
 
 end
