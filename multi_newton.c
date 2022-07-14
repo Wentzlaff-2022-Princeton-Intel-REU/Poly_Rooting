@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------*/
-/* multiNewton.c                                                      */
+/* multi_newton.c                                                      */
 /*--------------------------------------------------------------------*/
 
 #include <float.h>
@@ -10,8 +10,8 @@
 #include "derivative.h"
 #include "freePoly.h"
 #include "longDiv.h"
-#include "multiNewton.h"
-#include "multiHorner.h"
+#include "multi_horner.h"
+#include "multi_newton.h"
 #include "reading.h"
 #define GUESS_SIZE 2
 
@@ -27,7 +27,7 @@ static int compare(const void * a, const void * b) {
     return 0;  
 }
 
-double* multiNewton(Polynomial_t poly, double convCrit) {
+double* multi_newton(Polynomial_t poly, double convCrit) {
     double* roots = (double*)malloc(sizeof(double) * poly.degree);
     if (roots == NULL) {
         exit(2);
@@ -58,8 +58,8 @@ double* multiNewton(Polynomial_t poly, double convCrit) {
         bool firstLoop = true;
         do {
             bool noRoots = true;
-            double* polyGuess = multiHorner(newPoly, xGuess);
-            double* polyDerivGuess = multiHorner(polyDeriv, xGuess);
+            double* polyGuess = multi_horner(newPoly, xGuess);
+            double* polyDerivGuess = multi_horner(polyDeriv, xGuess);
             
             for (int j = 0; j < GUESS_SIZE; j++) {
                 oldXGuess[j] = xGuess[j];
