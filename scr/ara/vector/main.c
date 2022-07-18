@@ -25,11 +25,9 @@ int main(int argc, char *argv[]) {
             if (roots[i] == DBL_MAX) {
                 break;
             }
-            printf("The root approximation is: %.18lg \n", roots[i]);
+            printf("The root approximation is: %.14lg \n", roots[i]);
         }
     }
-    freePoly(&poly);
-    free(roots);
     
     // for (int i = 0; i <= polyd.degree; i++) {
     //     printf("%lf \n", polyd.coefficients[i]);
