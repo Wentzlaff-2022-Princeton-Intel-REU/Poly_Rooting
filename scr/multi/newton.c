@@ -9,10 +9,9 @@
 #include <stdlib.h>
 #include "derivative.h"
 #include "freePoly.h"
-#include "longDiv.h"
 #include "horner.h"
+#include "longDiv.h"
 #include "newton.h"
-#include "reading.h"
 #define GUESS_SIZE 2
 
 /*--------------------------------------------------------------------*/

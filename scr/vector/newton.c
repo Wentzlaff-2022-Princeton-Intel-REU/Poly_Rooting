@@ -8,10 +8,10 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "freePoly.h"
-#include "longDiv.h"
 #include "derivative.h"
+#include "freePoly.h"
 #include "horner.h"
+#include "longDiv.h"
 #include "newton.h"
 
 /*--------------------------------------------------------------------*/

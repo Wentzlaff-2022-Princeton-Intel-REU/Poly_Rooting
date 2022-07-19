@@ -6,8 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "freePoly.h"
-#include "reading.h"
 #include "newton.h"
+#include "reading.h"
 
 /*--------------------------------------------------------------------*/
 
