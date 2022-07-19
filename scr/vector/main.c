@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
             if (roots[i] == DBL_MAX) {
                 break;
             }
-            printf("The root approximation is: %.14lg \n", roots[i]);
+            printf("The root approximation is: %3lg \n", roots[i]);
         }
     }
     freePoly(&poly);
