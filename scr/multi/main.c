@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
     double* roots = newton(poly, crit_conversion);
 
     if (roots[0] == DBL_MAX) {
-        printf("Your polynomial has no roots.\n");
+        printf("Your polynomial has no real roots.\n");
     }
     else {
         for (int i = 0; i < poly.degree; i++) {

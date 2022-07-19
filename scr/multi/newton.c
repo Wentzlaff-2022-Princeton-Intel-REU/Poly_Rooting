@@ -88,8 +88,6 @@ double* newton(Polynomial_t poly, double convCrit) {
             cond = diff[0] > convCrit && diff[1] > convCrit;
             firstLoop = false;
         } while (cond);
-        freePoly(&newPoly);
-        freePoly(&polyDeriv);
 
         for (int j = 0; j < GUESS_SIZE; j++) {
             int degree = newPoly.degree;

@@ -45,7 +45,6 @@ double* newton(Polynomial_t poly, double convCrit) {
     Polynomial_t polyDeriv = derivative(poly);
     
     for (int i = 0; i < n; i++) {
-      fprintf(stderr, "i = %d\n", i);
       bool firstLoop = true;
         do { 
           oldXGuess = xGuess;
@@ -61,9 +60,6 @@ double* newton(Polynomial_t poly, double convCrit) {
           firstLoop = false;
         } while (diff > convCrit);
         roots[i] = xGuess;
-
-        freePoly(&newPoly);
-        freePoly(&polyDeriv);
 
         newPoly = longDiv(newPoly, xGuess, convCrit);
         polyDeriv = derivative(newPoly);
