@@ -71,6 +71,12 @@ class TestCase {
                     resolve(rst);
                 }
             });
+            if (this.isConnected) {
+                console.log('========= STDIN =========');
+                console.log(`${this.n}`);
+                for (const c of this.coeffs)
+                    console.log(`${c}`);
+            }
             try {
                 const stdinStream = new stream.Readable();
                 stdinStream.push(`${this.n}\n`);
