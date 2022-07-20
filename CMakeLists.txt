@@ -5,19 +5,19 @@ cmake_minimum_required (VERSION 2.8.11)
 project (Poly_Rooting)
 
 include_directories(include)
-add_library(poly scr/freePoly.c scr/longDiv.c scr/reading.c)
+add_library(poly src/freePoly.c src/longDiv.c src/reading.c)
 
-add_executable (poly_rooting scr/scalar/derivative.c scr/scalar/horner.c scr/scalar/main.c scr/scalar/newton.c)
+add_executable (poly_rooting src/scalar/derivative.c src/scalar/horner.c src/scalar/main.c src/scalar/newton.c)
 target_include_directories(poly_rooting PRIVATE include/scalar)
 target_link_libraries(poly_rooting PRIVATE poly)
 
-add_executable (multi_poly_rooting scr/multi/derivative.c scr/multi/horner.c scr/multi/main.c scr/multi/newton.c)
+add_executable (multi_poly_rooting src/multi/derivative.c src/multi/horner.c src/multi/main.c src/multi/newton.c)
 target_include_directories(multi_poly_rooting PRIVATE include/multi)
 target_link_libraries(multi_poly_rooting PRIVATE poly)
 
-add_executable (vec_poly_rooting scr/vector/derivative.c scr/vector/horner.c scr/vector/main.c scr/vector/newton.c)
+add_executable (vec_poly_rooting src/vector/derivative.c src/vector/horner.c src/vector/main.c src/vector/newton.c)
 target_include_directories(vec_poly_rooting PRIVATE include/vector)
 target_link_libraries(vec_poly_rooting PRIVATE poly)
 
-# add_executable (ara_poly_rooting scr/ara/reading.c scr/ara/scalar/derivative.c scr/ara/scalar/horner.c scr/ara/scalar/main.c scr/ara/scalar/newton.c scr/freePoly.c scr/longDiv.c)
-# add_executable (ara_vec_poly_rooting scr/ara/reading.c scr/ara/vector/derivative.c scr/ara/vector/horner.c scr/ara/vector/main.c scr/ara/vector/newton.c scr/freePoly.c scr/longDiv.c)
+# add_executable (ara_poly_rooting src/ara/reading.c src/ara/scalar/derivative.c src/ara/scalar/horner.c src/ara/scalar/main.c src/ara/scalar/newton.c src/freePoly.c src/longDiv.c)
+# add_executable (ara_vec_poly_rooting src/ara/reading.c src/ara/vector/derivative.c src/ara/vector/horner.c src/ara/vector/main.c src/ara/vector/newton.c src/freePoly.c src/longDiv.c)
