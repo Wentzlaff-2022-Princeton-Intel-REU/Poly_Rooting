@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 
 #include <float.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "freePoly.h"
@@ -23,7 +24,7 @@ int main(int argc, char *argv[]) {
     Polynomial_t poly = reading();
     double* roots = newton(poly, crit_conversion);
 
-    if (roots[0] == DBL_MAX) {
+    if (roots[0] == DBL_MAX || isnan(roots[0])) {
         printf("Your polynomial has no real roots.\n");
     }
     else {
@@ -36,10 +37,6 @@ int main(int argc, char *argv[]) {
     }
     freePoly(&poly);
     free(roots);
-    
-    // for (int i = 0; i <= polyd.degree; i++) {
-    //     printf("%lf \n", polyd.coefficients[i]);
-    // }
 
     return 0;
 }
