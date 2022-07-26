@@ -16,12 +16,12 @@
 
 // the compare function for double values
 static int compare(const void * a, const void * b) {
-  if (*(double*)a > *(double*)b)
-    return 1;
-  else if (*(double*)a < *(double*)b)
-    return -1;
-  else
-    return 0;  
+    if (*(double*)a > *(double*)b)
+        return 1;
+    else if (*(double*)a < *(double*)b)
+        return -1;
+    else
+        return 0;
 }
 
 double* newton(Polynomial_t poly, double convCrit) {
@@ -32,41 +32,52 @@ double* newton(Polynomial_t poly, double convCrit) {
     }
 
     for (int i = 0; i < n; i++) {
-      roots[i] = DBL_MAX;
+        roots[i] = DBL_MAX;
     }
 
-    double xGuess = (double) rand()/ (double) rand();
-    double oldXGuess = 0;
-    double diff = xGuess;
+    /* guess is intialized to some random integer in range [-5, 5]
+    guess = (rand() % (upper - lower + 1)) + lower
+    where upper and lower equal 5 and -5, respectively */
+    double guess = (rand() % 11) - 5;
+    double oldGuess = 0;
+    double diff = guess;
     double oldDiff = 0;
 
-    Polynomial_t newPoly = poly;
     Polynomial_t polyDeriv = derivative(poly);
-    
-    for (int i = 0; i < n; i++) {
-      bool firstLoop = true;
-        do { 
-          oldXGuess = xGuess;
-          xGuess -= horner(newPoly, xGuess) / horner(polyDeriv, xGuess);
-          oldDiff = diff;
-          diff = fabs(xGuess - oldXGuess);
-         // printf("guess: %lf, oldGuess: %lf, oldDiff: %lf, diff: %lf\n", xGuess, oldXGuess, oldDiff, diff);
 
-          if (!firstLoop && diff > oldDiff && fabs(diff - oldDiff) > 1) {
-            return roots;
-          }
+    int rootIndex = 0;
+    while (poly.degree > 0) {
+        bool firstLoop = true;
+        do {
+            oldGuess = guess;
+            guess -= horner(poly, guess) / horner(polyDeriv, guess);
+            oldDiff = diff;
+            diff = fabs(guess - oldGuess);
 
-          firstLoop = false;
-        } while (diff > convCrit);
-        roots[i] = xGuess;
+            if (poly.degree % 2 == 0 && !firstLoop && diff > oldDiff && fabs(diff - oldDiff) > 1) {
+                freePoly(&poly);
+                freePoly(&polyDeriv);
 
-        newPoly = longDiv(newPoly, xGuess, convCrit);
-        polyDeriv = derivative(newPoly);
+                qsort(roots, rootIndex + 1, sizeof(double), compare);
+                return roots;
+            }
+
+            firstLoop = false;
+        } while (diff > convCrit || oldDiff > convCrit);
+
+        if (!isfinite(guess)) {
+            guess = (rand() % 11) - 5;
+        }
+        else {
+            roots[rootIndex] = guess;
+            poly = longDiv(poly, guess, convCrit);
+            polyDeriv = derivative(poly);
+            rootIndex++;
+        }
     }
-    freePoly(&newPoly);
+    freePoly(&poly);
     freePoly(&polyDeriv);
 
     qsort(roots, n, sizeof(double), compare);
-    
     return roots;
 }

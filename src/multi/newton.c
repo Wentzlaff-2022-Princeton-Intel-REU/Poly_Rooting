@@ -26,51 +26,47 @@ static int compare(const void * a, const void * b) {
 }
 
 double* newton(Polynomial_t poly, double convCrit) {
-    double* roots = (double*)malloc(sizeof(double) * poly.degree);
+    int n = poly.degree;
+    double* roots = (double*)malloc(sizeof(double) * n);
     if (roots == NULL) {
         exit(2);
     }
 
-    for (int i = 0; i < poly.degree; i++) {
+    for (int i = 0; i < n; i++) {
       roots[i] = DBL_MAX;
     }
 
-    double* xGuess = (double*)malloc(sizeof(double) * GUESS_SIZE);
-    double* oldXGuess = (double*)malloc(sizeof(double) * GUESS_SIZE);
+    double* guesses = (double*)malloc(sizeof(double) * GUESS_SIZE);
+    double* oldGuesses = (double*)malloc(sizeof(double) * GUESS_SIZE);
     double* diff = (double*)malloc(sizeof(double) * GUESS_SIZE);
     double* oldDiff = (double*)malloc(sizeof(double) * GUESS_SIZE);
 
     for (int i = 0; i < GUESS_SIZE; i++){
-        xGuess[i] = (double) rand() / (double) rand();
-        oldXGuess[i] = 0;
-        diff[i] = xGuess[i];
+        /* guesses is intialized to some random integer in range [-5, 5]
+        guesses[i] = (rand() % (upper - lower + 1)) + lower
+        where upper and lower equal 5 and -5, respectively */ 
+        guesses[i] = (rand() % 11) - 5;
+        oldGuesses[i] = 0;
+        diff[i] = guesses[i];
         oldDiff[i] = 0;
     }
     
-    Polynomial_t newPoly = poly;
     Polynomial_t polyDeriv = derivative(poly);
 
-    int i = 0;
-    while (newPoly.degree > 0) {
-        bool cond = true;
+    int rootIndex = 0;
+    while (poly.degree > 0) {
         bool firstLoop = true;
         do {
             bool noRoots = true;
-            double* polyGuess = horner(newPoly, xGuess);
-            double* polyDerivGuess = horner(polyDeriv, xGuess);
+            double* polyGuess = horner(poly, guesses);
+            double* polyDerivGuess = horner(polyDeriv, guesses);
             
             for (int j = 0; j < GUESS_SIZE; j++) {
-                oldXGuess[j] = xGuess[j];
-                xGuess[j] -= polyGuess[j] / polyDerivGuess[j];
+                oldGuesses[j] = guesses[j];
+                guesses[j] -= polyGuess[j] / polyDerivGuess[j];
                 oldDiff[j] = diff[j];
-                diff[j] = fabs(xGuess[j] - oldXGuess[j]);
+                diff[j] = fabs(guesses[j] - oldGuesses[j]);
             }
-            
-            // printf("guess: %lf, diff: %lf\n", xGuess, fabs(xGuess - oldXGuess));
-
-            // for (int j = 0; j < GUESS_SIZE; j++) {
-            //     printf("guess: %lf, oldGuess: %lf, oldDiff: %lf, diff: %lf\n", xGuess[j], oldXGuess[j], oldDiff[j], diff[j]);
-            // }
 
             for (int j = 0; j < GUESS_SIZE; j++) {
                 noRoots = !firstLoop && diff[j] > oldDiff[j] && fabs(diff[j] - oldDiff[j]) > 1;
@@ -79,29 +75,47 @@ double* newton(Polynomial_t poly, double convCrit) {
                 }
             }
             
-            if (noRoots) {
+            if (poly.degree % 2 == 0 && (noRoots)) {
+                free(guesses);
+                free(oldGuesses);
+                free(diff);
+                free(oldDiff);
+                freePoly(&poly);
+                freePoly(&polyDeriv);
+
+                qsort(roots, rootIndex + 1, sizeof(double), compare);
                 return roots;
             }
 
-            cond = diff[0] > convCrit && diff[1] > convCrit;
+            // (diff[0] <= convCrit && oldDiff[0] <= convCrit) || (diff[1] <= convCrit && oldDiff[1] <= convCrit)
+            if (!((diff[0] > convCrit && diff[1] > convCrit) || (oldDiff[0] > convCrit && oldDiff[1] > convCrit))) {
+                break;
+            }
+
             firstLoop = false;
-        } while (cond);
+        } while (true);
 
         for (int j = 0; j < GUESS_SIZE; j++) {
-            int degree = newPoly.degree;
-            newPoly = longDiv(newPoly, xGuess[j], convCrit);
+            int degree = poly.degree;
+            poly = longDiv(poly, guesses[j], convCrit);
 
-            if (degree != newPoly.degree) {
-                roots[i] = xGuess[j];
-                i++;
+            if (degree != poly.degree) {
+                roots[rootIndex] = guesses[j];
+                rootIndex++;
+            }
+            else if (!isfinite(guesses[j])) {
+                guesses[j] = (rand() % 11) - 5;
             }
         }
-        polyDeriv = derivative(newPoly);
+        polyDeriv = derivative(poly);
     }
-    freePoly(&newPoly);
+    free(guesses);
+    free(oldGuesses);
+    free(diff);
+    free(oldDiff);
+    freePoly(&poly);
     freePoly(&polyDeriv);
 
-    qsort(roots, poly.degree, sizeof(double), compare);
-    
+    qsort(roots, n, sizeof(double), compare);
     return roots;
 }

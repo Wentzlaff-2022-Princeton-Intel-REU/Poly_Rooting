@@ -3,6 +3,7 @@
 /*--------------------------------------------------------------------*/
 
 #include <float.h>
+#include <math.h>
 #include <riscv_vector.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -26,47 +27,27 @@ static int compare(const void * a, const void * b) {
 
 double* newton(Polynomial_t poly, double convCrit) {
     int n = poly.degree;
-
     double* roots = (double*)malloc(sizeof(double) * poly.degree);
     if (roots == NULL) {
         exit(2);
     }
-
     for (int i = 0; i < poly.degree; i++) {
       roots[i] = DBL_MAX;
     }
 
     size_t guessSize = vsetvlmax_e32m1();
-    // if (poly.degree < 8) {
-    //     guessSize = poly.degree;
-    // }
-
     double* guesses = (double*)malloc(sizeof(double) * guessSize);
-    // double* oldXGuess = (double*)malloc(sizeof(double) * guessSize);
-    // double* diff = (double*)malloc(sizeof(double) * guessSize);
-    // double* oldDiff = (double*)malloc(sizeof(double) * guessSize);
 
     vfloat64m1_t vGuesses, vOldGuesses, vDiff, vOldDiff;
-
-    // for (int i = 0; i < guessSize; i++){
-    //     xGuess[i] = 0;
-    // //     oldXGuess[i] = 0;
-    // //     diff[i] = xGuess[i];
-    // //     oldDiff[i] = 0;
-    // }
-
     vGuesses = vfcvt_f_xu_v_f64m1(vid_v_u64m1(guessSize), guessSize);
     vOldGuesses = vfmv_v_f_f64m1(0, guessSize);
     vDiff = vGuesses;
     vOldDiff = vOldGuesses;
 
-    // Polynomial_t newPoly = poly;
     Polynomial_t polyDeriv = derivative(poly);
 
-    int i = 0;
+    int rootIndex = 0;
     while (poly.degree > 0) {
-        // bool cond = true;
-        long cond1 = 0;
         bool firstLoop = true;
         do {
             // bool noRoots = true;
@@ -90,8 +71,7 @@ double* newton(Polynomial_t poly, double convCrit) {
             //     diff[j] = fabs(xGuess[j] - oldXGuess[j]);
             // }
 
-            vOldGuesses = vmv_v_v_f64m1(vGuesses, guessSize);
-            // va = vfnmsac_vv_f64m1(va, ve, vf, guessSize);
+            vOldGuesses = vGuesses;
             vGuesses = vfsub_vv_f64m1(vGuesses, vfdiv_vv_f64m1(polyGuess, polyDerivGuess, guessSize), guessSize);
             vOldDiff = vmv_v_v_f64m1(vDiff, guessSize);
             vDiff = vfabs_v_f64m1(vfsub_vv_f64m1(vGuesses, vOldGuesses, guessSize), guessSize);
@@ -109,27 +89,29 @@ double* newton(Polynomial_t poly, double convCrit) {
             //     }
             // }
 
-            vbool64_t greaterDiff, greaterThan1, greaterThanConvCrit;
-
+            vbool64_t greaterDiff, greaterThan1;
             greaterDiff = vmfgt_vv_f64m1_b64(vDiff, vOldDiff, guessSize);
             greaterThan1 = vmfgt_vf_f64m1_b64(vfabs_v_f64m1(vfsub_vv_f64m1(vDiff, vOldDiff, guessSize), guessSize), 1, guessSize);
-            // vb3 = vmand_mm_b64(vb1, vb2, guessSize);
-            // long noRoots1 = vfirst_m_b64(vmnot_m_b64(vb3, guessSize), guessSize);
             long noMoreRoots = vfirst_m_b64(vmnand_mm_b64(greaterDiff, greaterThan1, guessSize), guessSize);
-            long isNaN = vfirst_m_b64(vmfne_vv_f64m1_b64(vDiff, vDiff, guessSize), guessSize);
 
-            if ((!firstLoop && noMoreRoots == -1) || isNaN != -1) {
-                qsort(roots, n, sizeof(double), compare);
+            if (poly.degree % 2 == 0 && !firstLoop && noMoreRoots == -1) {
+                free(guesses);
+                freePoly(&poly);
+                freePoly(&polyDeriv);
+
+                qsort(roots, rootIndex + 1, sizeof(double), compare);
                 return roots;
             }
 
             // cond = diff[0] > convCrit && diff[1] > convCrit;
 
-            // vfloat64m1_t crit;
-            // crit = vfmv_v_f_f64m1(convCrit, guessSize);
-            greaterThanConvCrit = vmfgt_vf_f64m1_b64(vDiff, convCrit, guessSize);
+            long diffGreaterThanConvCrit = vfirst_m_b64(vmnot_m_b64(vmfgt_vf_f64m1_b64(vDiff, convCrit, guessSize), guessSize), guessSize);
+            long oldDiffGreaterThanConvCrit = vfirst_m_b64(vmnot_m_b64(vmfgt_vf_f64m1_b64(vOldDiff, convCrit, guessSize), guessSize), guessSize);
+            // long diffGreaterThanConvCrit = vfirst_m_b64(vmfle_vf_f64m1_b64(vDiff, convCrit, guessSize), guessSize);
+            // long oldDiffGreaterThanConvCrit = vfirst_m_b64(vmfle_vf_f64m1_b64(vOldDiff, convCrit, guessSize), guessSize);
+
             // cond1 = vfirst_m_b64(vmnot_m_b64(vb4, guessSize), guessSize);
-            if (vfirst_m_b64(vmnot_m_b64(greaterThanConvCrit, guessSize), guessSize) != -1) {
+            if (diffGreaterThanConvCrit != -1) {
                 break;
             }
 
@@ -137,28 +119,30 @@ double* newton(Polynomial_t poly, double convCrit) {
         } while (true);
 
         vse64_v_f64m1(guesses, vGuesses, guessSize);
+        bool notFinite = false;
         for (int j = 0; j < guessSize; j++) {
-            // checks that the current current guess isn't infinity or NaN
-            // if (!isfinite(guesses[j])) {
-            //     qsort(roots, n, sizeof(double), compare);
-            //     return roots;
-            // }
-
             int degree = poly.degree;
             poly = longDiv(poly, guesses[j], convCrit);
 
             if (degree != poly.degree) {
-                roots[i] = guesses[j];
-                i++;
+                roots[rootIndex] = guesses[j];
+                rootIndex++;
+            }
+            else if (!isfinite(guesses[j])) {
+                notFinite = true;
+                guesses[j] = (rand() % 11) - 5;
             }
         }
+
         polyDeriv = derivative(poly);
+        if (notFinite) {
+            vGuesses = vle64_v_f64m1(guesses, guessSize);
+        }
     }
     free(guesses);
     freePoly(&poly);
     freePoly(&polyDeriv);
 
     qsort(roots, n, sizeof(double), compare);
-    
     return roots;
 }

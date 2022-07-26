@@ -5,7 +5,6 @@
 #include <float.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "freePoly.h"
 #include "newton.h"
 #include "reading.h"
 
@@ -19,7 +18,6 @@ int main(int argc, char *argv[]) {
     }
 
     double crit_conversion = strtod(argv[1], NULL);
-    
     Polynomial_t poly = reading();
     double* roots = newton(poly, crit_conversion);
 
@@ -34,8 +32,6 @@ int main(int argc, char *argv[]) {
             printf("The root approximation is: %.18lg \n", roots[i]);
         }
     }
-    freePoly(&poly);
     free(roots);
-
     return 0;
 }
