@@ -8,9 +8,6 @@
 
 /*--------------------------------------------------------------------*/
 
-/* This is a root-finding program that will take the derivative of a polynomial. 
-It depends on what the structure is. */
-
 Polynomial_t derivative(Polynomial_t myPoly) {
 
     //create new polynomial to represent the differentiated polynomial

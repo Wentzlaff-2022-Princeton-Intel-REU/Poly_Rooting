@@ -3,8 +3,6 @@
 /*--------------------------------------------------------------------*/
 
 #include <riscv_vector.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include "horner.h"
 
 /*--------------------------------------------------------------------*/
@@ -19,7 +17,7 @@ vfloat64m1_t horner(Polynomial_t poly, vfloat64m1_t vGuesses, int guessSize) {
     size_t avl = guessSize;
 
     for (size_t vl; (vl = vsetvl_e32m1(avl)) > 0; avl -= vl) {
-        // Filling the vector vSolutions with the highest coefficient(s)
+        // Filling the vector vSolutions with the highest coefficient
         vSolutions = vfmv_v_f_f64m1(poly.coefficients[poly.degree], vl);
 
         // This is the vector with our guesses (guesses vector).

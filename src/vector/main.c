@@ -3,7 +3,6 @@
 /*--------------------------------------------------------------------*/
 
 #include <float.h>
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "freePoly.h"
@@ -24,7 +23,7 @@ int main(int argc, char *argv[]) {
     Polynomial_t poly = reading();
     double* roots = newton(poly, crit_conversion);
 
-    if (roots[0] == DBL_MAX || isnan(roots[0])) {
+    if (roots[0] == DBL_MAX) {
         printf("Your polynomial has no real roots.\n");
     }
     else {
@@ -32,7 +31,7 @@ int main(int argc, char *argv[]) {
             if (roots[i] == DBL_MAX) {
                 break;
             }
-            printf("The root approximation is: %.3lg \n", roots[i]);
+            printf("The root approximation is: %.18lg \n", roots[i]);
         }
     }
     freePoly(&poly);

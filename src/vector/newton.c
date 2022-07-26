@@ -3,10 +3,8 @@
 /*--------------------------------------------------------------------*/
 
 #include <float.h>
-#include <math.h>
 #include <riscv_vector.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include "derivative.h"
 #include "freePoly.h"
@@ -118,17 +116,18 @@ double* newton(Polynomial_t poly, double convCrit) {
             // vb3 = vmand_mm_b64(vb1, vb2, guessSize);
             // long noRoots1 = vfirst_m_b64(vmnot_m_b64(vb3, guessSize), guessSize);
             long noMoreRoots = vfirst_m_b64(vmnand_mm_b64(greaterDiff, greaterThan1, guessSize), guessSize);
+            long isNaN = vfirst_m_b64(vmfne_vv_f64m1_b64(vDiff, vDiff, guessSize), guessSize);
 
-            if (!firstLoop && noMoreRoots == -1) {
+            if ((!firstLoop && noMoreRoots == -1) || isNaN != -1) {
                 qsort(roots, n, sizeof(double), compare);
                 return roots;
             }
 
             // cond = diff[0] > convCrit && diff[1] > convCrit;
 
-            vfloat64m1_t crit;
-            crit = vfmv_v_f_f64m1(convCrit, guessSize);
-            greaterThanConvCrit = vmfgt_vv_f64m1_b64(vDiff, crit, guessSize);
+            // vfloat64m1_t crit;
+            // crit = vfmv_v_f_f64m1(convCrit, guessSize);
+            greaterThanConvCrit = vmfgt_vf_f64m1_b64(vDiff, convCrit, guessSize);
             // cond1 = vfirst_m_b64(vmnot_m_b64(vb4, guessSize), guessSize);
             if (vfirst_m_b64(vmnot_m_b64(greaterThanConvCrit, guessSize), guessSize) != -1) {
                 break;
@@ -139,8 +138,8 @@ double* newton(Polynomial_t poly, double convCrit) {
 
         vse64_v_f64m1(guesses, vGuesses, guessSize);
         for (int j = 0; j < guessSize; j++) {
-            // equivalent to second condition on line 27 in main.c
-            // if (isnan(guesses[j])) {
+            // checks that the current current guess isn't infinity or NaN
+            // if (!isfinite(guesses[j])) {
             //     qsort(roots, n, sizeof(double), compare);
             //     return roots;
             // }
