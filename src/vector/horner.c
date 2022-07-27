@@ -19,7 +19,7 @@ vfloat64m1_t horner(Polynomial_t poly, vfloat64m1_t vGuesses, size_t guessSize) 
             (starting with the coefficient of the second high degree and
             moving to that of the lowest degree) to a vector */
             currCoeff = vfmv_v_f_f64m1(poly.coefficients[i-1], vl); 
-            // solutions += vGuesses * currCoeff
+            // solutions = vGuesses * solutions + currCoeff
             solutions = vfmadd_vv_f64m1(solutions, vGuesses, currCoeff, vl); 
         }
     }
