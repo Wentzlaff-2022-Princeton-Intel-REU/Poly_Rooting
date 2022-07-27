@@ -111,7 +111,7 @@ double* newton(Polynomial_t poly, double convCrit) {
             // long oldDiffGreaterThanConvCrit = vfirst_m_b64(vmfle_vf_f64m1_b64(vOldDiff, convCrit, guessSize), guessSize);
 
             // cond1 = vfirst_m_b64(vmnot_m_b64(vb4, guessSize), guessSize);
-            if (diffGreaterThanConvCrit != -1) {
+            if (diffGreaterThanConvCrit != -1 && oldDiffGreaterThanConvCrit != -1) {
                 break;
             }
 

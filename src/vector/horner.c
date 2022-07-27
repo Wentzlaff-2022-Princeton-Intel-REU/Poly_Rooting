@@ -8,11 +8,9 @@
 /*--------------------------------------------------------------------*/
 
 vfloat64m1_t horner(Polynomial_t poly, vfloat64m1_t vGuesses, size_t guessSize) {
-    // declare vector registers
     vfloat64m1_t currCoeff, solutions;
-    size_t avl = guessSize;
 
-    for (size_t vl; (vl = vsetvl_e32m1(avl)) > 0; avl -= vl) {
+    for (size_t vl; (vl = vsetvl_e32m1(guessSize)) > 0; guessSize -= vl) {
         // filling the vector solutions with the coefficient of the high degree
         solutions = vfmv_v_f_f64m1(poly.coefficients[poly.degree], vl);
 
