@@ -25,6 +25,3 @@ vfloat64m1_t horner(Polynomial_t poly, vfloat64m1_t vGuesses, size_t guessSize) 
     }
     return solutions;
 }
-
-
-

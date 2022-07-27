@@ -50,44 +50,14 @@ double* newton(Polynomial_t poly, double convCrit) {
     while (poly.degree > 0) {
         bool firstLoop = true;
         do {
-            // bool noRoots = true;
-            // double* polyGuess = horner(poly, xGuess, guessSize);
-            // double* polyDerivGuess = horner(polyDeriv, xGuess, guessSize);
-
             vfloat64m1_t polyGuess, polyDerivGuess;
             polyGuess = horner(poly, vGuesses, guessSize);
             polyDerivGuess = horner(polyDeriv, vGuesses, guessSize);
-
-            // vfloat64m1_t ve, vf;
-            // ones = vfmv_v_f_f64m1(1, guessSize);
-            // ve = vle64_v_f64m1(polyGuess, guessSize);
-            // vf = vle64_v_f64m1(polyDerivGuess, guessSize);
-            // vf = vfdiv_vv_f64m1(ones, vf, guessSize);
-
-            // for (int j = 0; j < 2; j++) {
-            //     oldXGuess[j] = xGuess[j];
-            //     xGuess[j] -= polyGuess[j] / polyDerivGuess[j];
-            //     oldDiff[j] = diff[j];
-            //     diff[j] = fabs(xGuess[j] - oldXGuess[j]);
-            // }
 
             vOldGuesses = vGuesses;
             vGuesses = vfsub_vv_f64m1(vGuesses, vfdiv_vv_f64m1(polyGuess, polyDerivGuess, guessSize), guessSize);
             vOldDiff = vmv_v_v_f64m1(vDiff, guessSize);
             vDiff = vfabs_v_f64m1(vfsub_vv_f64m1(vGuesses, vOldGuesses, guessSize), guessSize);
-
-            // printf("guess: %lf, diff: %lf\n", xGuess, fabs(xGuess - oldXGuess));
-
-            // for (int j = 0; j < 2; j++) {
-            //     printf("guess: %lf, oldGuess: %lf, oldDiff: %lf, diff: %lf\n", xGuess[j], oldXGuess[j], oldDiff[j], diff[j]);
-            // }
-
-            // for (int j = 0; j < 2; j++) {
-            //     noRoots = !firstLoop && diff[j] > oldDiff[j] && fabs(diff[j] - oldDiff[j]) > 1;
-            //     if (!noRoots) {
-            //         break;
-            //     }
-            // }
 
             vbool64_t greaterDiff, greaterThan1;
             greaterDiff = vmfgt_vv_f64m1_b64(vDiff, vOldDiff, guessSize);
@@ -103,14 +73,9 @@ double* newton(Polynomial_t poly, double convCrit) {
                 return roots;
             }
 
-            // cond = diff[0] > convCrit && diff[1] > convCrit;
-
             long diffGreaterThanConvCrit = vfirst_m_b64(vmnot_m_b64(vmfgt_vf_f64m1_b64(vDiff, convCrit, guessSize), guessSize), guessSize);
             long oldDiffGreaterThanConvCrit = vfirst_m_b64(vmnot_m_b64(vmfgt_vf_f64m1_b64(vOldDiff, convCrit, guessSize), guessSize), guessSize);
-            // long diffGreaterThanConvCrit = vfirst_m_b64(vmfle_vf_f64m1_b64(vDiff, convCrit, guessSize), guessSize);
-            // long oldDiffGreaterThanConvCrit = vfirst_m_b64(vmfle_vf_f64m1_b64(vOldDiff, convCrit, guessSize), guessSize);
 
-            // cond1 = vfirst_m_b64(vmnot_m_b64(vb4, guessSize), guessSize);
             if (diffGreaterThanConvCrit != -1 && oldDiffGreaterThanConvCrit != -1) {
                 break;
             }
